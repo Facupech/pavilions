@@ -81,17 +81,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Product click handler
 function openProduct(productId) {
-    console.log('Clicked product ID:', productId); // Debug
-    console.log('Redirecting to:', `producto.html?id=${productId}`); // Debug
+    console.log('Clicked product ID:', productId);
+    console.log('Redirecting to:', `producto.html?id=${productId}`);
     
     // Guardar ID en sessionStorage como fallback
     sessionStorage.setItem('selectedProductId', productId);
     
-    // Usar localhost:3000 directamente para evitar problemas del preview
-    const fullUrl = `http://localhost:3000/producto.html?id=${productId}`;
-    console.log('Full URL:', fullUrl);
+    // Usar ruta relativa para funcionar con file://
+    const relativeUrl = `producto.html?id=${productId}`;
+    console.log('Relative URL:', relativeUrl);
     
-    window.location.href = fullUrl;
+    window.location.href = relativeUrl;
 }
 
 // WhatsApp integration

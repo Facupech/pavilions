@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- NAVBAR -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
             <div class="logo">
                 <h1><a href="index.html" style="text-decoration: none; color: inherit;">T PAVILIONS</a></h1>
@@ -36,125 +36,295 @@
         </div>
     </nav>
 
-    <!-- HERO BANNER -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>T PAVILIONS</h1>
-            <p>Ropa minimalista para el día a día</p>
-        </div>
-    </section>
-
-    <!-- INFO MARCA -->
-    <section class="brand-info">
+    <!-- SECCIÓN DE BIENVENIDA -->
+    <section class="welcome-section">
         <div class="container">
-            <p>
-                T PAVILIONS nace de la pasión por el diseño minimalista y la calidad premium. 
-                Cada pieza está pensada para quienes buscan estilo sin complicaciones.
-            </p>
-        </div>
-    </section>
-
-    <!-- SLIDER PRODUCTOS 1 -->
-    <section class="products-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Nuevos Ingresos</h2>
-                <a href="#" class="ver-todo-btn">Ver Todo</a>
+            <div class="welcome-content">
+                <h1 class="welcome-title">T PAVILIONS</h1>
+                <p class="welcome-subtitle">Estilo minimalista para tu día a día</p>
             </div>
-            <div class="slider-container">
-                <button class="slider-arrow prev" onclick="moveSlider('slider1', -1)">←</button>
-                <div class="products-slider" id="slider1">
-                    <div class="product-card" data-product-id="1" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 1" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Hoodie Classic</h3>
-                    </div>
-                    <div class="product-card" data-product-id="2" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 2" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Remera Basic</h3>
-                    </div>
-                    <div class="product-card" data-product-id="3" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 3" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Pantalón Cargo</h3>
-                    </div>
-                    <div class="product-card" data-product-id="4" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 4" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Camiseta Oversize</h3>
-                    </div>
+        </div>
+        <!-- LOGO HERO DENTRO DEL WELCOME -->
+        <div class="logo-hero-wrapper" id="logoHeroWrapper">
+            <div class="logo-hero" id="logoHero">
+                <img src="LOGO/LOGO 2026.png" alt="T PAVILIONS Logo">
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- SLIDER PRODUCTOS 1 -->
+        <section class="products-section" id="productos">
+            <div class="container">
+                <div class="section-header fade-in-up">
+                    <h2>Nuevos Ingresos</h2>
+                    <a href="#" class="ver-todo-btn">Ver Todo</a>
                 </div>
-                <button class="slider-arrow next" onclick="moveSlider('slider1', 1)">→</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- BANNER 2 -->
-    <section class="banner-secondary">
-        <div class="banner-content">
-            <h2>Colección Temporada</h2>
-            <p>Descubre las piezas clave de esta temporada</p>
-        </div>
-    </section>
-
-    <!-- SLIDER PRODUCTOS 2 -->
-    <section class="products-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>Colección Temporada</h2>
-                <a href="#" class="ver-todo-btn">Ver Todo</a>
-            </div>
-            <div class="slider-container">
-                <button class="slider-arrow prev" onclick="moveSlider('slider2', -1)">←</button>
-                <div class="products-slider" id="slider2">
-                    <div class="product-card" data-product-id="5" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 5" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Buzo Premium</h3>
-                    </div>
-                    <div class="product-card" data-product-id="6" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 6" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Jeans Slim</h3>
-                    </div>
-                    <div class="product-card" data-product-id="7" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 7" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Campera Minimal</h3>
-                    </div>
-                    <div class="product-card" data-product-id="8" onclick="openProduct(this.dataset.productId)">
-                        <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 8" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                        <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Gorra Classic</h3>
-                    </div>
-                </div>
-                <button class="slider-arrow next" onclick="moveSlider('slider2', 1)">→</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- BANNER FINAL + FOOTER -->
-    <section class="banner-footer">
-        <div class="banner-footer-image">
-            <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Banner Final">
-            <div class="banner-footer-overlay">
-                <div class="banner-footer-content">
-                    <h2>T PAVILIONS</h2>
-                    <p>Estilo minimalista para tu día a día</p>
-                    <div class="footer-info">
-                        <div class="footer-contact">
-                            <h3>Contacto</h3>
-                            <a href="https://wa.me/5491127641124" target="_blank" class="whatsapp-link">
-                                WhatsApp: +54 9 1127-641124
-                            </a>
+                <div class="slider-container">
+                    <button class="slider-arrow prev" onclick="moveSlider('slider1', -1)">←</button>
+                    <div class="products-slider" id="slider1">
+                        <div class="product-card" data-product-id="1" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 1" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Hoodie Classic</h3>
                         </div>
-                        <div class="footer-social">
-                            <h3>Redes</h3>
-                            <a href="#">Instagram</a>
-                            <a href="#">Facebook</a>
+                        <div class="product-card" data-product-id="2" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 2" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Remera Basic</h3>
+                        </div>
+                        <div class="product-card" data-product-id="3" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 3" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Pantalón Cargo</h3>
+                        </div>
+                        <div class="product-card" data-product-id="4" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 4" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Camiseta Oversize</h3>
                         </div>
                     </div>
-                    <div class="footer-bottom">
-                        <p>&copy; 2024 T PAVILIONS. Todos los derechos reservados.</p>
+                    <button class="slider-arrow next" onclick="moveSlider('slider1', 1)">→</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BANNER 2 -->
+        <section class="banner-secondary">
+            <div class="banner-content">
+                <h2 class="fade-in-up">Colección Temporada</h2>
+                <p class="fade-in-up delay-100">Descubre los diseños más recientes</p>
+            </div>
+        </section>
+
+        <!-- SLIDER PRODUCTOS 2 -->
+        <section class="products-section">
+            <div class="container">
+                <div class="section-header fade-in-up">
+                    <h2>Colección Temporada</h2>
+                    <a href="#" class="ver-todo-btn">Ver Todo</a>
+                </div>
+                <div class="slider-container">
+                    <button class="slider-arrow prev" onclick="moveSlider('slider2', -1)">←</button>
+                    <div class="products-slider" id="slider2">
+                        <div class="product-card" data-product-id="5" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 5" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Buzo Premium</h3>
+                        </div>
+                        <div class="product-card" data-product-id="6" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 6" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Jeans Slim</h3>
+                        </div>
+                        <div class="product-card" data-product-id="7" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 7" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Campera Minimal</h3>
+                        </div>
+                        <div class="product-card" data-product-id="8" onclick="openProduct(this.dataset.productId)">
+                            <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 8" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
+                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Gorra Classic</h3>
+                        </div>
+                    </div>
+                    <button class="slider-arrow next" onclick="moveSlider('slider2', 1)">→</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BANNER FINAL + FOOTER -->
+        <section class="banner-footer">
+            <div class="banner-footer-image">
+                <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Banner Final">
+                <div class="banner-footer-overlay">
+                    <div class="banner-footer-content">
+                        <h2>T PAVILIONS</h2>
+                        <p>Estilo minimalista para tu día a día</p>
+                        <div class="footer-info">
+                            <div class="footer-contact">
+                                <h3>Contacto</h3>
+                                <a href="https://wa.me/5491127641124" target="_blank" class="whatsapp-link">
+                                    WhatsApp: +54 9 1127-641124
+                                </a>
+                            </div>
+                            <div class="footer-social">
+                                <h3>Redes</h3>
+                                <a href="#">Instagram</a>
+                                <a href="#">Facebook</a>
+                            </div>
+                        </div>
+                        <div class="footer-bottom">
+                            <p>&copy; 2024 T PAVILIONS. Todos los derechos reservados.</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script src="js/app.js"></script>
+    <script>
+        // Logo Hero Animation
+        let logoHero = document.getElementById('logoHero');
+        let navbar = document.getElementById('navbar');
+        let isScrolled = false;
+
+        window.addEventListener('scroll', function() {
+            const scrollY = window.scrollY;
+            const welcomeSection = document.querySelector('.welcome-section');
+            const welcomeTop = welcomeSection.offsetTop;
+            const welcomeHeight = welcomeSection.offsetHeight;
+            const welcomeBottom = welcomeTop + welcomeHeight;
+            
+            // Solo animar dentro del welcome section
+            if (scrollY >= welcomeTop && scrollY <= welcomeBottom) {
+                const progress = (scrollY - welcomeTop) / welcomeHeight;
+                const scale = 1 - (progress * 0.8);
+                const opacity = 1 - (progress * 0.7);
+                
+                // Logo se achica DENTRO del welcome (se mueve con el scroll)
+                logoHero.style.position = 'absolute';
+                logoHero.style.top = '50%';
+                logoHero.style.left = '50%';
+                logoHero.style.transform = `translate(-50%, -50%) scale(${scale})`;
+                logoHero.style.width = '80vw';
+                logoHero.style.height = '80vh';
+                logoHero.style.opacity = opacity;
+                logoHero.style.display = 'flex';
+                
+                // Asegurar que el logo esté DENTRO del welcome
+                welcomeSection.appendChild(logoHero);
+                
+                isScrolled = true;
+            } else if (scrollY > welcomeBottom) {
+                // Después del welcome - todo desaparece
+                logoHero.style.display = 'none';
+                isScrolled = false;
+            } else {
+                // Antes del welcome - logo gigante
+                logoHero.style.position = 'absolute';
+                logoHero.style.top = '50%';
+                logoHero.style.left = '50%';
+                logoHero.style.transform = 'translate(-50%, -50%) scale(1)';
+                logoHero.style.width = '80vw';
+                logoHero.style.height = '80vh';
+                logoHero.style.opacity = '1';
+                logoHero.style.display = 'flex';
+                
+                // Asegurar que el logo esté DENTRO del welcome
+                welcomeSection.appendChild(logoHero);
+                
+                isScrolled = false;
+            }
+        });
+
+        // Animaciones al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            // Forzar logo grande al cargar
+            logoHero.style.cssText = `
+                position: absolute !important;
+                top: 58% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 80vw !important;
+                height: 80vh !important;
+                background: #ffffff !important;
+                z-index: 998 !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            `;
+            
+            const animatedElements = document.querySelectorAll('.fade-in-up');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            animatedElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.6s ease-out';
+                observer.observe(el);
+            });
+        });
+    </script>
+
+    <style>
+        /* ESTILOS ADICIONALES */
+        .main-content {
+            margin-top: 0;
+        }
+
+        .welcome-section {
+            padding: 40px 0;
+            text-align: center;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .welcome-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 15px 30px;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.8;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+
+        .btn-secondary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-section {
+                padding: 100px 0 60px;
+            }
+            
+            .welcome-section h2 {
+                font-size: 32px;
+            }
+            
+            .welcome-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 200px;
+            }
+        }
+    </style>
 </body>
 </html>

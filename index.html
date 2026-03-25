@@ -175,10 +175,11 @@
                 const progress = (scrollY - welcomeTop) / welcomeHeight;
                 const scale = 1 - (progress * 0.8);
                 const opacity = 1 - (progress * 0.7);
+                const topPosition = 59 - (progress * 39); // De 59% a 20%
                 
                 // Logo se achica DENTRO del welcome (se mueve con el scroll)
                 logoHero.style.position = 'absolute';
-                logoHero.style.top = '50%';
+                logoHero.style.top = `${topPosition}%`;
                 logoHero.style.left = '50%';
                 logoHero.style.transform = `translate(-50%, -50%) scale(${scale})`;
                 logoHero.style.width = '80vw';
@@ -217,7 +218,7 @@
             // Forzar logo grande al cargar
             logoHero.style.cssText = `
                 position: absolute !important;
-                top: 58% !important;
+                top: 59% !important;
                 left: 50% !important;
                 transform: translate(-50%, -50%) !important;
                 width: 80vw !important;

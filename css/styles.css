@@ -753,7 +753,7 @@ body {
 /* LOGO HERO - POSICIÓN ABSOLUTA SIMPLE */
 .logo-hero {
     position: absolute;
-    top: 58%; /* Un poco más abajo aún */
+    top: 59%; /* Un poquititito más arriba */
     left: 50%;
     transform: translate(-50%, -50%);
     width: 80vw;

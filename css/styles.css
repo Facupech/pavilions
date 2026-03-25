@@ -423,6 +423,7 @@ body {
     color: #ffffff;
     max-width: 800px;
     padding: 0 20px;
+    transform: translateY(50px); /* Bajar todo el contenedor 50px */
 }
 
 .banner-footer-content h2 {
@@ -437,6 +438,7 @@ body {
     font-size: 18px;
     font-weight: 300;
     margin-bottom: 40px;
+    margin-top: 50px; /* Más margen superior - de 20px a 50px */
     opacity: 0.9;
 }
 
@@ -1059,6 +1061,11 @@ body {
     
     .banner-footer-content p {
         font-size: 16px;
+        margin-top: 40px; /* Más margen superior en mobile también */
+    }
+    
+    .banner-footer-content {
+        transform: translateY(30px); /* Bajar contenedor 30px en mobile */
     }
     
     .section-header {

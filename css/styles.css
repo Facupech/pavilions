@@ -273,9 +273,97 @@ body {
     opacity: 0.8;
 }
 
+/* BANNER SECONDARY CARRUSEL */
+.banner-secondary {
+    height: 90vh !important; /* Forzar altura - sobreescribe otras reglas */
+    position: relative;
+    overflow: hidden;
+}
+
+.banner-carousel {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.carousel-slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+}
+
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Línea de progreso */
+.progress-bar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px; /* Ancho fijo más corto */
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: 3;
+    border-radius: 2px;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: #ffffff;
+    transition: width 0.1s linear;
+    border-radius: 2px;
+}
+
+/* Flechas del carrusel */
+.carousel-arrow {
+    position: absolute;
+    bottom: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 3;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 0;
+    width: auto;
+    height: auto;
+}
+
+.carousel-arrow:hover {
+    color: #cccccc;
+    transform: scale(1.2);
+}
+
+.carousel-arrow.prev {
+    left: 30px; /* Extremo izquierdo de la pantalla */
+}
+
+.carousel-arrow.next {
+    right: 30px; /* Extremo derecho de la pantalla */
+}
+
 /* BANNER SECONDARY */
 .banner-secondary {
-    height: 60vh;
+    height: 90vh !important; /* Mantener misma altura con !important */
     background: linear-gradient(135deg, #000000 0%, #333333 100%);
     display: flex;
     align-items: center;
@@ -958,7 +1046,7 @@ body {
     }
     
     .banner-secondary {
-        height: 40vh;
+        height: 90vh !important; /* Mobile también con !important */
     }
     
     .banner-footer {

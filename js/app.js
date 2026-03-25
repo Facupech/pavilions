@@ -79,6 +79,74 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Carousel functionality
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const progressFill = document.querySelector('.progress-fill');
+const slideDuration = 6000; // 6 segundos por slide (más lento)
+let progressInterval;
+let slideInterval;
+
+function showSlide(index) {
+    // Hide all slides
+    slides.forEach(slide => slide.classList.remove('active'));
+    
+    // Show current slide
+    slides[index].classList.add('active');
+    
+    // Reset and start progress
+    resetProgress();
+    startProgress();
+}
+
+function resetProgress() {
+    progressFill.style.width = '0%';
+    clearInterval(progressInterval);
+}
+
+function startProgress() {
+    let progress = 0;
+    const increment = 100 / (slideDuration / 50); // Actualizar cada 50ms
+    
+    progressInterval = setInterval(() => {
+        progress += increment;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+        }
+        progressFill.style.width = progress + '%';
+    }, 50);
+}
+
+function previousSlide() {
+    currentSlide--;
+    if (currentSlide < 0) {
+        currentSlide = slides.length - 1;
+    }
+    showSlide(currentSlide);
+}
+
+function nextSlide() {
+    currentSlide++;
+    if (currentSlide >= slides.length) {
+        currentSlide = 0;
+    }
+    showSlide(currentSlide);
+}
+
+// Auto-play carousel
+function startAutoPlay() {
+    slideInterval = setInterval(nextSlide, slideDuration);
+}
+
+// Initialize carousel
+document.addEventListener('DOMContentLoaded', function() {
+    if (slides.length > 0) {
+        showSlide(0);
+        startAutoPlay();
+    }
+});
+
 // Product click handler
 function openProduct(productId) {
     console.log('Clicked product ID:', productId);

@@ -24,6 +24,7 @@
                         <a href="hoodies.html" class="dropdown-item">Hoodies</a>
                         <a href="pantalones.html" class="dropdown-item">Pantalones</a>
                         <a href="accesorios.html" class="dropdown-item">Accesorios</a>
+                        <a href="todos.html" class="dropdown-item">Todos</a>
                     </div>
                 </div>
             </div>
@@ -46,18 +47,191 @@
     <!-- GRID DE PRODUCTOS -->
     <section class="products-section">
         <div class="container">
-            <div class="products-grid">
-                <div class="product-card" onclick="openProduct(2)">
-                    <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Remera Basic">
-                    <h3>Remera Basic</h3>
-                </div>
-                <div class="product-card" onclick="openProduct(4)">
-                    <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Camiseta Oversize">
-                    <h3>Camiseta Oversize</h3>
-                </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Los productos de categoría "remeras" se cargarán dinámicamente aquí -->
             </div>
         </div>
     </section>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Cargar productos de categoría "remeras" desde localStorage
+        class RemerasLoader {
+            constructor() {
+                this.products = this.loadProducts();
+                this.init();
+            }
+
+            loadProducts() {
+                const stored = localStorage.getItem('pavilions_products');
+                const allProducts = stored ? JSON.parse(stored) : [];
+                // Filtrar solo productos de categoría "remeras"
+                return allProducts.filter(product => product.categoria === 'remeras');
+            }
+
+            init() {
+                this.renderProducts();
+            }
+
+            renderProducts() {
+                const grid = document.getElementById('productsGrid');
+                if (!grid) return;
+
+                if (this.products.length === 0) {
+                    grid.innerHTML = '<p style="text-align: center; padding: 60px; color: #666;">No hay remeras cargadas. <a href="admin.html" style="color: #000; font-weight: bold;">Agregar productos</a></p>';
+                    return;
+                }
+
+                grid.innerHTML = this.products.map(product => {
+                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    const precio = product.precio ? `$${product.precio.toLocaleString('es-AR')}` : 'Precio no disponible';
+                    const stock = this.getStockText(product);
+                    
+                    return `
+                        <div class="product-card" onclick="openProduct('${product.id}')">
+                            <div class="product-image-container">
+                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                            </div>
+                            <h3>${product.nombre}</h3>
+                            <div class="product-info">
+                                <p class="price">${precio}</p>
+                                <p class="category">${product.categoria}</p>
+                                <p class="stock">${stock}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            getStockText(product) {
+                if (product.tipoTalle === 'unico') {
+                    return `Talle único: ${product.stock.unico || 0} unidades`;
+                } else {
+                    return `Stock: S:${product.stock.S || 0} M:${product.stock.M || 0} L:${product.stock.L || 0} XL:${product.stock.XL || 0}`;
+                }
+            }
+        }
+
+        // Función openProduct para que funcione con productos dinámicos
+        function openProduct(productId) {
+            const products = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                localStorage.setItem('selected_product', JSON.stringify(product));
+                window.location.href = 'producto.html';
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            new RemerasLoader();
+        });
+    </script>
+
+    <style>
+        /* GRID DE PRODUCTOS */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .products-grid .product-card {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .products-grid .product-card:hover {
+            transform: scale(1.02);
+        }
+
+        .products-grid .product-card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .primary-img {
+            opacity: 1;
+        }
+
+        .secondary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .primary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .secondary-img {
+            opacity: 1;
+        }
+
+        .products-grid .product-card h3 {
+            font-size: 14px;
+            font-weight: 400;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000000;
+            margin-top: 15px;
+        }
+        
+        .product-info {
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .product-info .price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 5px 0;
+        }
+        
+        .product-info .category {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 5px 0;
+        }
+        
+        .product-info .stock {
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0;
+        }
+
+        @media (max-width: 768px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+                padding: 20px 0;
+            }
+        }
+    </style>
 
     <!-- BANNER FINAL + FOOTER -->
     <section class="banner-footer">
@@ -110,6 +284,39 @@
             width: 100%;
             height: 400px;
             object-fit: cover;
+        }
+
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .primary-img {
+            opacity: 1;
+        }
+
+        .secondary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .primary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .secondary-img {
+            opacity: 1;
         }
 
         .products-grid .product-card h3 {

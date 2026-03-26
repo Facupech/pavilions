@@ -39,70 +39,8 @@
     <!-- PRODUCT PAGE -->
     <main class="product-page">
         <div class="container">
-            <div class="product-layout">
-                <!-- GALERÍA DE IMÁGENES -->
-                <div class="product-gallery">
-                    <div class="main-image">
-                        <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto Principal" id="mainImage">
-                    </div>
-                    <div class="thumbnail-slider">
-                        <button class="thumb-arrow prev" onclick="changeImage(-1)">←</button>
-                        <div class="thumbnails">
-                            <div class="thumbnail active" onclick="setMainImage('fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg', this)">
-                                <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Imagen 1">
-                            </div>
-                            <div class="thumbnail" onclick="setMainImage('fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg', this)">
-                                <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Imagen 2">
-                            </div>
-                            <div class="thumbnail" onclick="setMainImage('fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg', this)">
-                                <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Imagen 3">
-                            </div>
-                            <div class="thumbnail" onclick="setMainImage('fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg', this)">
-                                <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Imagen 4">
-                            </div>
-                        </div>
-                        <button class="thumb-arrow next" onclick="changeImage(1)">→</button>
-                    </div>
-                </div>
-
-                <!-- INFORMACIÓN DEL PRODUCTO -->
-                <div class="product-info">
-                    <h1 class="product-name">Hoodie Classic</h1>
-                    <p class="product-description">Hoodie oversize premium confeccionado con algodón de alta calidad. Diseño minimalista perfecto para el día a día.</p>
-                    
-                    <!-- ESPECIFICACIONES -->
-                    <div class="product-specs">
-                        <h3>Especificaciones</h3>
-                        <ul>
-                            <li>100% algodón premium</li>
-                            <li>Fit oversize</li>
-                            <li>Capucha con cordón ajustable</li>
-                            <li>Bolsillo frontal canguro</li>
-                        </ul>
-                    </div>
-
-                    <!-- SELECTOR DE TALLE -->
-                    <div class="size-selector">
-                        <h3>Talle</h3>
-                        <div class="size-options">
-                            <button class="size-btn" onclick="selectSize('S', this)">S</button>
-                            <button class="size-btn" onclick="selectSize('M', this)">M</button>
-                            <button class="size-btn" onclick="selectSize('L', this)">L</button>
-                            <button class="size-btn" onclick="selectSize('XL', this)">XL</button>
-                        </div>
-                        <p class="size-error" id="sizeError" style="display: none; color: red; font-size: 12px; margin-top: 5px;">
-                            Por favor selecciona un talle
-                        </p>
-                    </div>
-
-                    <!-- BOTÓN CONSULTAR -->
-                    <div class="product-actions">
-                        <button class="consult-btn" id="consultBtn" disabled onclick="consultProduct()">
-                            CONSULTAR
-                        </button>
-                        <p class="consult-info">Al hacer clic se abrirá WhatsApp para consultar por este producto</p>
-                    </div>
-                </div>
+            <div class="product-layout" id="productLayout">
+                <!-- El contenido del producto se cargará dinámicamente aquí -->
             </div>
         </div>
     </main>
@@ -167,6 +105,22 @@
             cursor: not-allowed;
             opacity: 0.6;
         }
+
+        /* BOTONES DE TALLE */
+        .size-btn:disabled {
+            background: #f5f5f5 !important;
+            color: #cccccc !important;
+            border: 2px solid #e0e0e0 !important;
+            cursor: not-allowed !important;
+            opacity: 0.5 !important;
+            transform: none !important;
+        }
+
+        .size-btn:disabled:hover {
+            background: #f5f5f5 !important;
+            transform: none !important;
+            opacity: 0.5 !important;
+        }
     </style>
 
     <script src="js/app.js"></script>
@@ -174,240 +128,210 @@
         let selectedSize = null;
         let currentImageIndex = 0;
         let currentProduct = null;
-        
-        // Base de datos de productos
-        const products = {
-            1: {
-                name: "Hoodie Classic",
-                description: "Hoodie oversize premium confeccionado con algodón de alta calidad. Diseño minimalista perfecto para el día a día.",
-                specs: ["100% algodón premium", "Fit oversize", "Capucha con cordón ajustable", "Bolsillo frontal canguro"],
-                images: [
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            2: {
-                name: "Remera Basic",
-                description: "Remera clásica de algodón con corte recto. Perfecta para combinar con cualquier look casual.",
-                specs: ["100% algodón", "Corte regular fit", "Cuello redondo", "Sin estampados"],
-                images: [
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            3: {
-                name: "Pantalón Cargo",
-                description: "Pantalón cargo con múltiples bolsillos. Diseño funcional y estilo urbano.",
-                specs: ["Algodón resistente", "6 bolsillos funcionales", "Cintura ajustable", "Tiro regular"],
-                images: [
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            4: {
-                name: "Camiseta Oversize",
-                description: "Camiseta con corte oversize para un look moderno y cómodo.",
-                specs: ["Algodón peinado", "Fit oversize", "Mangas anchas", "Largo extendido"],
-                images: [
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg"
-                ]
-            },
-            5: {
-                name: "Buzo Premium",
-                description: "Buzo de alta calidad con detalles premium. Ideal para climas fríos.",
-                specs: ["Mezcla de algodón y poliéster", "Forro interior suave", "Cremallera metálica", "Bolsillos laterales"],
-                images: [
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            6: {
-                name: "Jeans Slim",
-                description: "Jeans con corte slim fit que se adapta perfectamente al cuerpo.",
-                specs: ["Denim de alta calidad", "Corte slim", "5 bolsillos clásicos", "Cierre con cremallera y botones"],
-                images: [
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            7: {
-                name: "Campera Minimal",
-                description: "Campera minimalista perfecta para transiciones de temporada.",
-                specs: ["Nylon resistente", "Capucha desmontable", "Cierre impermeable", "Bolsillos internos"],
-                images: [
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg"
-                ]
-            },
-            8: {
-                name: "Gorra Classic",
-                description: "Gorra clásica con ajuste perfecto y diseño atemporal.",
-                specs: ["Algodón resistente", "Cierre ajustable", "Visera curva", "Ventilación trasera"],
-                images: [
-                    "fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg",
-                    "fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg",
-                    "fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg",
-                    "fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg"
-                ]
-            }
-        };
 
-        // Obtener ID del producto de la URL
-        function getProductId() {
-            // Intentar múltiples métodos para obtener el ID
-            let id = null;
-            
-            // Método 1: URLSearchParams
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                id = urlParams.get('id');
-                console.log('Method 1 - URLSearchParams:', id);
-            } catch (e) {
-                console.log('Method 1 failed:', e);
-            }
-            
-            // Método 2: Parse manual
-            if (!id) {
-                const url = window.location.href;
-                const match = url.match(/[?&]id=([^&#]*)/);
-                id = match ? match[1] : null;
-                console.log('Method 2 - Manual parse:', id);
-            }
-            
-            // Método 3: Extraer de window.location.search directamente
-            if (!id) {
-                const search = window.location.search.substring(1);
-                const params = search.split('&');
-                for (let param of params) {
-                    const [key, value] = param.split('=');
-                    if (key === 'id') {
-                        id = value;
-                        break;
-                    }
-                }
-                console.log('Method 3 - Direct search:', id);
-            }
-            
-            console.log('Final ID:', id || '1');
-            return id || '1'; // Default al producto 1
-        }
-
-        // Cargar producto
+        // Cargar producto desde localStorage
         function loadProduct() {
-            // Intentar obtener ID de múltiples formas
-            let productId = null;
+            console.log('=== INICIANDO CARGA DE PRODUCTO ===');
             
-            // Método 1: URLSearchParams
-            try {
-                const urlParams = new URLSearchParams(window.location.search);
-                productId = urlParams.get('id');
-            } catch (e) {}
+            // Obtener ID del producto del URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            console.log('ID del producto del URL:', productId);
             
-            // Método 2: Parse manual
             if (!productId) {
-                const url = window.location.href;
-                const match = url.match(/[?&]id=([^&#]*)/);
-                productId = match ? match[1] : null;
+                console.log('❌ No hay ID de producto en el URL, redirigiendo...');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Buscar el producto en localStorage
+            const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            console.log('Todos los productos:', allProducts);
+            
+            currentProduct = allProducts.find(product => product.id === productId);
+            console.log('Producto encontrado:', currentProduct);
+            
+            if (!currentProduct) {
+                console.log('❌ Producto no encontrado, redirigiendo...');
+                window.location.href = 'index.html';
+                return;
             }
             
-            // Método 3: Extraer de window.location.search
-            if (!productId) {
-                const search = window.location.search.substring(1);
-                const params = search.split('&');
-                for (let param of params) {
-                    const [key, value] = param.split('=');
-                    if (key === 'id') {
-                        productId = value;
-                        break;
+            console.log('✅ Producto cargado exitosamente:', currentProduct);
+            
+            // Verificar que el producto tenga los datos necesarios
+            if (!currentProduct || !currentProduct.nombre) {
+                console.log('❌ El producto no tiene datos válidos');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            console.log('🎯 Producto válido, renderizando...');
+            renderProduct();
+        }
+
+        // Renderizar el producto dinámicamente
+        function renderProduct() {
+            const layout = document.getElementById('productLayout');
+            if (!layout || !currentProduct) {
+                console.log('❌ No hay layout o producto');
+                return;
+            }
+
+            console.log('🎨 Renderizando producto:', currentProduct);
+
+            // Obtener imágenes del producto
+            const images = getProductImages();
+            console.log('📷 Imágenes del producto:', images);
+            
+            // Generar HTML del producto
+            layout.innerHTML = `
+                <!-- GALERÍA DE IMÁGENES -->
+                <div class="product-gallery">
+                    <div class="main-image">
+                        <img src="${images[0]}" alt="${currentProduct.nombre}" id="mainImage">
+                    </div>
+                    ${images.length > 1 ? `
+                    <div class="thumbnail-slider">
+                        <button class="thumb-arrow prev" onclick="changeImage(-1)">←</button>
+                        <div class="thumbnails">
+                            ${images.map((img, index) => `
+                                <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="setMainImage('${img}', this)">
+                                    <img src="${img}" alt="Imagen ${index + 1}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button class="thumb-arrow next" onclick="changeImage(1)">→</button>
+                    </div>
+                    ` : ''}
+                </div>
+
+                <!-- INFORMACIÓN DEL PRODUCTO -->
+                <div class="product-info">
+                    <h1 class="product-name">${currentProduct.nombre || 'Sin nombre'}</h1>
+                    <p class="product-description">${currentProduct.descripcion || 'Producto de T PAVILIONS'}</p>
+                    
+                    <!-- PRECIO -->
+                    <div class="product-price">
+                        <h3>Precio</h3>
+                        <p class="price">${currentProduct.precio ? `$${currentProduct.precio.toLocaleString('es-AR')}` : 'Consultar precio'}</p>
+                    </div>
+
+                    <!-- CATEGORÍA -->
+                    <div class="product-category">
+                        <h3>Categoría</h3>
+                        <p>${currentProduct.categoria || 'Sin categoría'}</p>
+                    </div>
+
+                    <!-- STOCK -->
+                    <div class="product-stock">
+                        <h3>Stock disponible</h3>
+                        <p>${getStockText()}</p>
+                    </div>
+
+                    <!-- SELECTOR DE TALLE -->
+                    <div class="size-selector">
+                        <h3>Talle</h3>
+                        <div class="size-options">
+                            ${generateSizeOptions()}
+                        </div>
+                        <p class="size-error" id="sizeError" style="display: none; color: red; font-size: 12px; margin-top: 5px;">
+                            Por favor selecciona un talle
+                        </p>
+                    </div>
+
+                    <!-- BOTÓN CONSULTAR -->
+                    <div class="product-actions">
+                        <button class="consult-btn" id="consultBtn" disabled onclick="consultProduct()">
+                            CONSULTAR
+                        </button>
+                        <p class="consult-info">Al hacer clic se abrirá WhatsApp para consultar por este producto</p>
+                    </div>
+                </div>
+            `;
+            
+            console.log('✅ Producto renderizado exitosamente');
+        }
+
+        // Obtener imágenes del producto
+        function getProductImages() {
+            if (!currentProduct) return ['https://via.placeholder.com/600x800?text=Sin+producto'];
+            
+            if (currentProduct.fotos && currentProduct.fotos.length > 0) {
+                return currentProduct.fotos.map(foto => foto.data);
+            } else if (currentProduct.foto) {
+                return [currentProduct.foto];
+            }
+            return ['https://via.placeholder.com/600x800?text=Sin+imagen'];
+        }
+
+        // Generar opciones de talle
+        function generateSizeOptions() {
+            if (!currentProduct || !currentProduct.stock) {
+                return '<p>No hay información de talles disponible</p>';
+            }
+            
+            if (currentProduct.tipoTalle === 'unico') {
+                const stockUnico = currentProduct.stock.unico || 0;
+                const disabled = stockUnico === 0 ? 'disabled' : '';
+                return `<button class="size-btn" onclick="selectSize('unico', this)" ${disabled}>Talle Único</button>`;
+            } else {
+                const talles = ['S', 'M', 'L', 'XL'];
+                return talles.map(talle => {
+                    const stock = currentProduct.stock[talle] || 0;
+                    const disabled = stock === 0 ? 'disabled' : '';
+                    return `<button class="size-btn" onclick="selectSize('${talle}', this)" ${disabled}>${talle}</button>`;
+                }).join('');
+            }
+        }
+
+        // Obtener texto de stock
+        function getStockText() {
+            if (!currentProduct || !currentProduct.stock) {
+                return 'Sin información de stock';
+            }
+            
+            if (currentProduct.tipoTalle === 'unico') {
+                return `Talle único: ${currentProduct.stock.unico || 0} unidades`;
+            } else {
+                const stockInfo = [];
+                ['S', 'M', 'L', 'XL'].forEach(talle => {
+                    const stock = currentProduct.stock[talle] || 0;
+                    if (stock > 0) {
+                        stockInfo.push(`${talle}: ${stock} unidades`);
                     }
-                }
+                });
+                return stockInfo.length > 0 ? stockInfo.join(', ') : 'Sin stock';
             }
-            
-            // Método 4: Usar sessionStorage como fallback
-            if (!productId) {
-                productId = sessionStorage.getItem('selectedProductId');
-            }
-            
-            console.log('Final product ID:', productId || '1');
-            currentProduct = products[productId] || products[1];
-            console.log('Product data:', currentProduct); // Debug
-            
-            // Actualizar información del producto
-            document.querySelector('.product-name').textContent = currentProduct.name;
-            document.querySelector('.product-description').textContent = currentProduct.description;
-            
-            // Actualizar especificaciones
-            const specsList = document.querySelector('.product-specs ul');
-            specsList.innerHTML = '';
-            currentProduct.specs.forEach(spec => {
-                const li = document.createElement('li');
-                li.textContent = spec;
-                specsList.appendChild(li);
-            });
-            
-            // Actualizar imágenes
-            currentImageIndex = 0;
-            updateMainImage();
-            updateThumbnails();
-        }
-
-        function updateMainImage() {
-            document.getElementById('mainImage').src = currentProduct.images[currentImageIndex];
-        }
-
-        function updateThumbnails() {
-            const thumbnailsContainer = document.querySelector('.thumbnails');
-            thumbnailsContainer.innerHTML = '';
-            
-            currentProduct.images.forEach((image, index) => {
-                const thumbnail = document.createElement('div');
-                thumbnail.className = `thumbnail ${index === currentImageIndex ? 'active' : ''}`;
-                thumbnail.onclick = () => setMainImage(image, thumbnail);
-                
-                const img = document.createElement('img');
-                img.src = image;
-                img.alt = `Imagen ${index + 1}`;
-                
-                thumbnail.appendChild(img);
-                thumbnailsContainer.appendChild(thumbnail);
-            });
         }
 
         function selectSize(size, element) {
             selectedSize = size;
             
-            // Remover clase active de todos los botones
+            // Actualizar botones
             document.querySelectorAll('.size-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
-            // Agregar clase active al botón seleccionado
             element.classList.add('active');
             
             // Ocultar error si estaba visible
-            document.getElementById('sizeError').style.display = 'none';
+            const sizeError = document.getElementById('sizeError');
+            if (sizeError) {
+                sizeError.style.display = 'none';
+            }
             
             // Habilitar botón de consultar
-            document.getElementById('consultBtn').disabled = false;
+            const consultBtn = document.getElementById('consultBtn');
+            if (consultBtn) {
+                consultBtn.disabled = false;
+            }
         }
 
         function setMainImage(imageSrc, element) {
-            document.getElementById('mainImage').src = imageSrc;
+            const mainImage = document.getElementById('mainImage');
+            if (mainImage) {
+                mainImage.src = imageSrc;
+            }
             
             // Actualizar thumbnail activa
             document.querySelectorAll('.thumbnail').forEach(thumb => {
@@ -416,15 +340,17 @@
             element.classList.add('active');
             
             // Actualizar índice
-            currentImageIndex = currentProduct.images.indexOf(imageSrc);
+            const images = getProductImages();
+            currentImageIndex = images.indexOf(imageSrc);
         }
 
         function changeImage(direction) {
+            const images = getProductImages();
             currentImageIndex += direction;
             
             if (currentImageIndex < 0) {
-                currentImageIndex = currentProduct.images.length - 1;
-            } else if (currentImageIndex >= currentProduct.images.length) {
+                currentImageIndex = images.length - 1;
+            } else if (currentImageIndex >= images.length) {
                 currentImageIndex = 0;
             }
             
@@ -436,14 +362,29 @@
             });
         }
 
+        function updateMainImage() {
+            const images = getProductImages();
+            const mainImage = document.getElementById('mainImage');
+            if (mainImage && images[currentImageIndex]) {
+                mainImage.src = images[currentImageIndex];
+            }
+        }
+
         function consultProduct() {
             if (!selectedSize) {
-                document.getElementById('sizeError').style.display = 'block';
+                const sizeError = document.getElementById('sizeError');
+                if (sizeError) {
+                    sizeError.style.display = 'block';
+                }
                 return;
             }
             
-            const productName = currentProduct.name;
-            openWhatsApp(productName, selectedSize);
+            const productName = currentProduct.nombre;
+            const sizeText = selectedSize === 'unico' ? 'Talle Único' : selectedSize;
+            const message = `Hola, quiero consultar por el producto "${productName}" en talle ${sizeText}. ¿Lo tienen disponible?`;
+            
+            const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
         // Cargar producto al iniciar la página

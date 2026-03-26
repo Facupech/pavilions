@@ -1,6 +1,6 @@
 // T PAVILIONS - JavaScript Principal
 
-// Slider functionality
+// Slider functionality - Sistema cíclico profesional
 let sliderPositions = {
     slider1: 0,
     slider2: 0
@@ -8,37 +8,69 @@ let sliderPositions = {
 
 function moveSlider(sliderId, direction) {
     const slider = document.getElementById(sliderId);
-    const cards = Array.from(slider.querySelectorAll('.product-card'));
+    const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
     
-    // Agregar clase para animación
-    slider.style.transition = 'transform 0.3s ease';
+    if (allProducts.length === 0) return;
     
-    // Animación de salida
-    if (direction > 0) {
-        slider.style.transform = 'translateX(-330px)';
-        setTimeout(() => {
-            // Mover primera card al final
-            const firstCard = cards.shift();
-            slider.appendChild(firstCard);
-            slider.style.transition = 'none';
-            slider.style.transform = 'translateX(0)';
-            setTimeout(() => {
-                slider.style.transition = 'transform 0.3s ease';
-            }, 50);
-        }, 300);
-    } else {
-        slider.style.transform = 'translateX(330px)';
-        setTimeout(() => {
-            // Mover última card al inicio
-            const lastCard = cards.pop();
-            slider.insertBefore(lastCard, slider.firstChild);
-            slider.style.transition = 'none';
-            slider.style.transform = 'translateX(0)';
-            setTimeout(() => {
-                slider.style.transition = 'transform 0.3s ease';
-            }, 50);
-        }, 300);
+    // Filtrar productos según el slider
+    let filteredProducts;
+    if (sliderId === 'slider1') {
+        // Slider 1: Solo productos nuevos
+        filteredProducts = allProducts.filter(product => {
+            const categorias = product.categoriasSliders || {};
+            return categorias.nuevo === true;
+        });
+    } else if (sliderId === 'slider2') {
+        // Slider 2: Solo productos de temporada
+        filteredProducts = allProducts.filter(product => {
+            const categorias = product.categoriasSliders || {};
+            return categorias.temporada === true;
+        });
     }
+    
+    if (filteredProducts.length === 0) return;
+    
+    // Actualizar posición actual (solo dentro de productos filtrados)
+    if (direction > 0) {
+        sliderPositions[sliderId] = (sliderPositions[sliderId] + 1) % filteredProducts.length;
+    } else {
+        sliderPositions[sliderId] = (sliderPositions[sliderId] - 1 + filteredProducts.length) % filteredProducts.length;
+    }
+    
+    // Obtener 3 productos desde la posición actual (solo de productos filtrados)
+    const startIndex = sliderPositions[sliderId];
+    const productosAMostrar = [];
+    
+    for (let i = 0; i < 3; i++) {
+        const index = (startIndex + i) % filteredProducts.length;
+        productosAMostrar.push(filteredProducts[index]);
+    }
+    
+    // Animación profesional: fade out/in
+    const cards = slider.querySelectorAll('.product-card');
+    
+    // Fade out de los productos actuales
+    cards.forEach(card => {
+        card.style.transition = 'opacity 0.2s ease';
+        card.style.opacity = '0';
+    });
+    
+    setTimeout(() => {
+        // Cambiar productos con fade in
+        slider.innerHTML = productosAMostrar.map((product) => {
+            const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+            const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+            return `
+                <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                    <div class="product-image-container">
+                        <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                        <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                    </div>
+                    <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                </div>
+            `;
+        }).join('');
+    }, 200);
 }
 
 // Touch/swipe support for mobile
@@ -169,3 +201,242 @@ function openWhatsApp(productName, size) {
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     window.open(url, '_blank');
 }
+
+// Sistema de Banners Dinámicos
+class BannerManager {
+    constructor() {
+        this.banners = [];
+        this.currentBannerIndex = 0;
+        this.autoRotateInterval = null;
+        this.init();
+    }
+
+    init() {
+        this.loadBanners();
+        this.setupEventListeners();
+        this.startAutoRotation();
+    }
+
+    loadBanners() {
+        const storedBanners = localStorage.getItem('pavilions_banners');
+        console.log('=== CARGANDO BANNERS ==='); // Debug
+        console.log('Banners en localStorage:', storedBanners); // Debug
+        
+        if (storedBanners) {
+            this.banners = JSON.parse(storedBanners);
+            console.log('Banners parseados:', this.banners); // Debug
+            console.log('Cantidad de banners:', this.banners.length); // Debug
+            
+            // Filtrar solo banners activos
+            this.banners = this.banners.filter(banner => banner.activo === true);
+            console.log('Banners activos:', this.banners); // Debug
+            console.log('Cantidad de banners activos:', this.banners.length); // Debug
+            
+            this.renderBanners();
+        } else {
+            console.log('No hay banners en localStorage'); // Debug
+            this.showPlaceholder();
+        }
+    }
+
+    renderBanners() {
+        const container = document.getElementById('carouselContainer');
+        
+        if (!container) return;
+
+        if (this.banners.length === 0) {
+            this.showPlaceholder();
+            return;
+        }
+
+        // Renderizar banners
+        container.innerHTML = this.banners.map((banner, index) => `
+            <div class="carousel-slide ${index === 0 ? 'active' : ''}" data-banner-index="${index}" onclick="bannerManager.handleBannerClick(${index})" style="cursor: pointer; width: 100%; height: 100%; overflow: hidden;">
+                ${banner.imagen ? 
+                    `<img src="${banner.imagen}" alt="Banner" style="width: 100%; height: 100%; object-fit: cover; display: block;">` : 
+                    `<div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white;">
+                        <div style="text-align: center; padding: 20px;">
+                            <h2 style="font-size: 32px; margin-bottom: 10px;">Banner</h2>
+                            <p style="font-size: 18px; opacity: 0.8;">Sin imagen</p>
+                        </div>
+                    </div>`
+                }
+            </div>
+        `).join('');
+
+        this.currentBannerIndex = 0;
+        this.updateProgressBar();
+    }
+
+    showPlaceholder() {
+        const container = document.getElementById('carouselContainer');
+        
+        if (container) {
+            container.innerHTML = `
+                <div class="carousel-slide active">
+                    <div class="banner-placeholder">
+                        <h2>No hay banners activos</h2>
+                        <p>Configura tus banners en el panel de administración</p>
+                        <a href="admin.html" style="display: inline-block; margin-top: 15px; padding: 12px 30px; background: white; color: #667eea; text-decoration: none; font-weight: 600; border-radius: 5px;">Ir al Admin</a>
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+    setupEventListeners() {
+        // Las flechas ya tienen onclick en el HTML
+    }
+
+    handleBannerClick(index) {
+        console.log('🚨 === CLICK EN BANNER DEBUG COMPLETO ==='); // Debug
+        console.log('Índice recibido:', index); // Debug
+        console.log('Índice actual del bannerManager:', this.currentBannerIndex); // Debug
+        console.log('Total de banners cargados:', this.banners.length); // Debug
+        console.log('Todos los banners:', this.banners); // Debug
+        
+        const banner = this.banners[index];
+        console.log('🎯 Banner que se va a usar:', banner); // Debug
+        console.log('🎯 Enlace del banner:', banner.enlace); // Debug
+        
+        if (banner && banner.enlace && banner.enlace.trim() !== '') {
+            console.log('✅ Enlace válido, procesando:', banner.enlace); // Debug
+            
+            // Si es un producto específico
+            if (banner.enlace.startsWith('producto.html?id=')) {
+                const productId = banner.enlace.split('id=')[1];
+                console.log('🎯 PRODUCTO ESPECÍFICO - ID:', productId); // Debug
+                console.log('🎯 URL completa:', banner.enlace); // Debug
+                console.log('🎯 Redirigiendo AHORA a:', banner.enlace); // Debug
+                window.location.href = banner.enlace;
+                return;
+            }
+            
+            // Si es una página HTML existente (pantalones.html, remeras.html, etc.)
+            if (banner.enlace.includes('.html')) {
+                console.log('📄 PÁGINA HTML - Redirigiendo a:', banner.enlace); // Debug
+                window.location.href = banner.enlace;
+                return;
+            }
+            
+            // Si es un ancla (#), verificar si la sección existe
+            if (banner.enlace.startsWith('#')) {
+                const targetId = banner.enlace.substring(1); // Quitar el #
+                console.log('🔍 ANCLA - Buscando sección:', targetId); // Debug
+                
+                const targetElement = document.getElementById(targetId);
+                console.log('🔍 Elemento encontrado:', targetElement); // Debug
+                
+                if (targetElement) {
+                    console.log('✅ Haciendo scroll a:', targetId); // Debug
+                    targetElement.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                } else {
+                    console.log(`⚠️ La sección con id="${targetId}" no existe`); // Debug
+                    console.log('Secciones disponibles:', this.getAvailableSections()); // Debug
+                    alert(`La sección "${targetId}" no existe. Secciones disponibles: ${this.getAvailableSections().join(', ')}`);
+                }
+            } else {
+                console.log('🌐 URL NORMAL - Redirigiendo a:', banner.enlace); // Debug
+                window.location.href = banner.enlace;
+            }
+        } else {
+            console.log('❌ Banner sin enlace configurado'); // Debug
+            console.log('❌ Valor de enlace:', banner.enlace); // Debug
+        }
+        
+        console.log('🚨 === FIN DEBUG CLICK ==='); // Debug
+    }
+
+    getAvailableSections() {
+        const sections = document.querySelectorAll('section[id], div[id]');
+        return Array.from(sections).map(el => el.id).filter(id => id && id !== '');
+    }
+
+    changeBanner(direction) {
+        if (this.banners.length === 0) return;
+
+        console.log('=== CAMBIANDO BANNER ==='); // Debug
+        console.log('Índice actual:', this.currentBannerIndex); // Debug
+        console.log('Dirección:', direction); // Debug
+        console.log('Banner actual:', this.banners[this.currentBannerIndex]); // Debug
+
+        const slides = document.querySelectorAll('.carousel-slide');
+
+        // Ocultar banner actual
+        slides[this.currentBannerIndex].classList.remove('active');
+
+        // Calcular nuevo índice
+        this.currentBannerIndex = (this.currentBannerIndex + direction + this.banners.length) % this.banners.length;
+
+        console.log('Nuevo índice:', this.currentBannerIndex); // Debug
+        console.log('Nuevo banner:', this.banners[this.currentBannerIndex]); // Debug
+
+        // Mostrar nuevo banner
+        slides[this.currentBannerIndex].classList.add('active');
+
+        // Reiniciar auto-rotación
+        this.restartAutoRotation();
+        this.updateProgressBar();
+    }
+
+    startAutoRotation() {
+        if (this.banners.length === 0) return;
+
+        // Obtener tiempo del banner actual
+        const currentBanner = this.banners[this.currentBannerIndex];
+        const tiempo = currentBanner?.tiempo || 5; // Default 5 segundos
+
+        this.clearAutoRotation();
+        this.autoRotateInterval = setInterval(() => {
+            this.changeBanner(1);
+        }, tiempo * 1000);
+
+        this.updateProgressBar();
+    }
+
+    restartAutoRotation() {
+        this.startAutoRotation();
+    }
+
+    clearAutoRotation() {
+        if (this.autoRotateInterval) {
+            clearInterval(this.autoRotateInterval);
+            this.autoRotateInterval = null;
+        }
+    }
+
+    updateProgressBar() {
+        const progressFill = document.getElementById('progressFill');
+        if (!progressFill || this.banners.length === 0) return;
+
+        const currentBanner = this.banners[this.currentBannerIndex];
+        const tiempo = currentBanner?.tiempo || 5; // Default 5 segundos
+
+        // Resetear animación
+        progressFill.style.transition = 'none';
+        progressFill.style.width = '0%';
+
+        // Forzar reflow
+        progressFill.offsetHeight;
+
+        // Iniciar animación
+        progressFill.style.transition = `width ${tiempo}s linear`;
+        progressFill.style.width = '100%';
+    }
+}
+
+// Inicializar el sistema de banners
+let bannerManager;
+document.addEventListener('DOMContentLoaded', function() {
+    bannerManager = new BannerManager();
+    
+    // Debug: Forzar limpieza de cache si es necesario
+    if (window.location.search.includes('debug=true')) {
+        console.log('🧹 Modo debug: Limpiando cache de banners...');
+        localStorage.removeItem('pavilions_banners');
+        location.reload();
+    }
+});

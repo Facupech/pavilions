@@ -64,50 +64,33 @@
                 <div class="slider-container">
                     <button class="slider-arrow prev" onclick="moveSlider('slider1', -1)">←</button>
                     <div class="products-slider" id="slider1">
-                        <div class="product-card" data-product-id="1" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 1" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Hoodie Classic</h3>
-                        </div>
-                        <div class="product-card" data-product-id="2" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 2" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Remera Basic</h3>
-                        </div>
-                        <div class="product-card" data-product-id="3" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 3" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Pantalón Cargo</h3>
-                        </div>
-                        <div class="product-card" data-product-id="4" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 4" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Camiseta Oversize</h3>
-                        </div>
+                        <!-- Los productos se cargarán dinámicamente aquí -->
                     </div>
                     <button class="slider-arrow next" onclick="moveSlider('slider1', 1)">→</button>
                 </div>
             </div>
         </section>
 
-        <!-- BANNER SECONDARY CARRUSEL -->
+        <!-- BANNER DINÁMICO -->
         <section class="banner-secondary">
-            <div class="banner-carousel">
-                <div class="carousel-container">
-                    <div class="carousel-slide active">
-                        <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Colección Temporada 1">
-                    </div>
-                    <div class="carousel-slide">
-                        <img src="fotos banner/1101db710eebcb6badf9755f126db50c.jpg" alt="Colección Temporada 2">
-                    </div>
-                    <div class="carousel-slide">
-                        <img src="fotos banner/acde67dc5bbde150a3073f77df5f6e65.jpg" alt="Colección Temporada 3">
+            <div class="banner-carousel" id="bannerCarousel">
+                <div class="carousel-container" id="carouselContainer">
+                    <!-- Los banners se cargarán dinámicamente aquí -->
+                    <div class="carousel-slide active" id="dynamicBannerSlide">
+                        <div class="banner-placeholder">
+                            <h2>Cargando banners...</h2>
+                            <p>Configura tus banners en el panel de administración</p>
+                        </div>
                     </div>
                 </div>
                 
                 <!-- Flechas de navegación -->
-                <button class="carousel-arrow prev" onclick="previousSlide()">&lt;</button>
-                <button class="carousel-arrow next" onclick="nextSlide()">&gt;</button>
+                <button class="carousel-arrow prev" onclick="bannerManager.changeBanner(-1)">&lt;</button>
+                <button class="carousel-arrow next" onclick="bannerManager.changeBanner(1)">&gt;</button>
                 
                 <!-- Línea de progreso -->
                 <div class="progress-bar">
-                    <div class="progress-fill"></div>
+                    <div class="progress-fill" id="progressFill"></div>
                 </div>
             </div>
         </section>
@@ -122,22 +105,7 @@
                 <div class="slider-container">
                     <button class="slider-arrow prev" onclick="moveSlider('slider2', -1)">←</button>
                     <div class="products-slider" id="slider2">
-                        <div class="product-card" data-product-id="5" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/5030ed73cc5c6acdcf97e1701fb3e15a.jpg" alt="Producto 5" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Buzo Premium</h3>
-                        </div>
-                        <div class="product-card" data-product-id="6" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/51fb0f2f41b8f480cfd762fc87a14c86.jpg" alt="Producto 6" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Jeans Slim</h3>
-                        </div>
-                        <div class="product-card" data-product-id="7" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/bea25e0fb7412a1af7aafa8a95bf3cca.jpg" alt="Producto 7" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Campera Minimal</h3>
-                        </div>
-                        <div class="product-card" data-product-id="8" onclick="openProduct(this.dataset.productId)">
-                            <img src="fotos productos/dbd4083d78de96893f2edc657cb103bc.jpg" alt="Producto 8" onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">
-                            <h3 onclick="event.stopPropagation(); openProduct(this.parentElement.dataset.productId)">Gorra Classic</h3>
-                        </div>
+                        <!-- Los productos se cargarán dinámicamente aquí -->
                     </div>
                     <button class="slider-arrow next" onclick="moveSlider('slider2', 1)">→</button>
                 </div>
@@ -268,6 +236,146 @@
             });
         });
     </script>
+    
+    <script>
+        // Cargar productos desde localStorage y mostrarlos dinámicamente
+        class ProductLoader {
+            constructor() {
+                this.products = this.loadProducts();
+                this.init();
+            }
+
+            loadProducts() {
+                const stored = localStorage.getItem('pavilions_products');
+                console.log('Productos en localStorage:', stored);
+                const products = stored ? JSON.parse(stored) : [];
+                console.log('Productos parseados:', products);
+                return products;
+            }
+
+            init() {
+                this.renderSlider1(); // Nuevos Ingresos
+                this.renderSlider2(); // Colección Temporada
+            }
+
+            renderSlider1() {
+                const slider1 = document.getElementById('slider1');
+                if (!slider1) return;
+
+                // Obtener TODOS los productos
+                let todosLosProductos = this.products;
+                
+                if (todosLosProductos.length === 0) {
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados. <a href="admin.html" style="color: #000; font-weight: bold;">Agregar productos</a></p>';
+                    return;
+                }
+
+                // Filtrar SOLO productos marcados como "nuevo"
+                let productosNuevos = todosLosProductos.filter(product => {
+                    const categorias = product.categoriasSliders || {};
+                    return categorias.nuevo === true;
+                });
+                
+                if (productosNuevos.length === 0) {
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Nuevos Ingresos". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    return;
+                }
+
+                // Si hay menos de 3 productos nuevos, repetir hasta tener 3
+                if (productosNuevos.length < 3) {
+                    const productosRepetidos = [];
+                    let index = 0;
+                    while (productosRepetidos.length < 3) {
+                        productosRepetidos.push(productosNuevos[index]);
+                        index = (index + 1) % productosNuevos.length;
+                    }
+                    productosNuevos = productosRepetidos;
+                }
+
+                // Mostrar solo 3 productos nuevos centrados
+                slider1.innerHTML = productosNuevos.map((product) => {
+                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    return `
+                        <div class="product-card" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                            <div class="product-image-container">
+                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                            </div>
+                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderSlider2() {
+                const slider2 = document.getElementById('slider2');
+                if (!slider2) return;
+
+                // Obtener TODOS los productos
+                let todosLosProductos = this.products;
+                
+                if (todosLosProductos.length === 0) {
+                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados para la colección.</p>';
+                    return;
+                }
+
+                // Filtrar SOLO productos marcados como "temporada"
+                let productosTemporada = todosLosProductos.filter(product => {
+                    const categorias = product.categoriasSliders || {};
+                    return categorias.temporada === true;
+                });
+                
+                if (productosTemporada.length === 0) {
+                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Colección Temporada". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    return;
+                }
+
+                // Si hay menos de 3 productos de temporada, repetir hasta tener 3
+                if (productosTemporada.length < 3) {
+                    const productosRepetidos = [];
+                    let index = 0;
+                    while (productosRepetidos.length < 3) {
+                        productosRepetidos.push(productosTemporada[index]);
+                        index = (index + 1) % productosTemporada.length;
+                    }
+                    productosTemporada = productosRepetidos;
+                }
+
+                // Mostrar solo 3 productos de temporada centrados
+                slider2.innerHTML = productosTemporada.map((product) => {
+                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    return `
+                        <div class="product-card" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                            <div class="product-image-container">
+                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                            </div>
+                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Modificar openProduct para que funcione con productos dinámicos
+        function openProduct(productId) {
+            const products = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                // Guardar producto seleccionado en localStorage para que producto.html lo lea
+                localStorage.setItem('selected_product', JSON.stringify(product));
+                window.location.href = 'producto.html';
+            }
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            new ProductLoader();
+        });
+    </script>
 
     <style>
         /* ESTILOS ADICIONALES */
@@ -342,6 +450,38 @@
             .btn-primary, .btn-secondary {
                 width: 200px;
             }
+        }
+        .product-image-container {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+        }
+
+        .product-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease;
+        }
+
+        .primary-img {
+            opacity: 1;
+        }
+
+        .secondary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .primary-img {
+            opacity: 0;
+        }
+
+        .product-card:hover .secondary-img {
+            opacity: 1;
         }
     </style>
 </body>

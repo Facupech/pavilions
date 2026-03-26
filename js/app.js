@@ -73,6 +73,104 @@ function moveSlider(sliderId, direction) {
     }, 200);
 }
 
+function renderSlider1() {
+                console.log('=== CARGANDO SLIDER 1 ==='); // Debug
+                const slider1 = document.getElementById('slider1');
+                if (!slider1) return;
+
+                // Obtener TODOS los productos desde localStorage
+                let todosLosProductos = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+                console.log('Todos los productos:', todosLosProductos.length); // Debug
+                console.log('Productos:', todosLosProductos.map(p => ({id: p.id, nombre: p.nombre, categorias: p.categoriasSliders}))); // Debug
+                
+                if (todosLosProductos.length === 0) {
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados. <a href="admin.html" style="color: #000; font-weight: bold;">Agregar productos</a></p>';
+                    return;
+                }
+
+                // Filtrar SOLO productos marcados como "nuevo"
+                let productosNuevos = todosLosProductos.filter(product => {
+                    const categorias = product.categoriasSliders || {};
+                    return categorias.nuevo === true;
+                });
+                
+                console.log('Productos filtrados como "nuevo":', productosNuevos.length); // Debug
+                console.log('Productos nuevos:', productosNuevos.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
+                
+                if (productosNuevos.length === 0) {
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Nuevos Ingresos". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    return;
+                }
+
+                // Mostrar solo los primeros 3 productos nuevos centrados
+                const productosAMostrar = productosNuevos.slice(0, 3);
+                console.log('Productos a mostrar (primeros 3):', productosAMostrar.length); // Debug
+                console.log('Productos finales:', productosAMostrar.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
+                
+                slider1.innerHTML = productosAMostrar.map((product) => {
+                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    return `
+                        <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                            <div class="product-image-container">
+                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                            </div>
+                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+function renderSlider2() {
+                console.log('=== CARGANDO SLIDER 2 ==='); // Debug
+                const slider2 = document.getElementById('slider2');
+                if (!slider2) return;
+
+                // Obtener TODOS los productos desde localStorage
+                let todosLosProductos = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+                console.log('Todos los productos:', todosLosProductos.length); // Debug
+                console.log('Productos:', todosLosProductos.map(p => ({id: p.id, nombre: p.nombre, categorias: p.categoriasSliders}))); // Debug
+                
+                if (todosLosProductos.length === 0) {
+                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados para la colección.</p>';
+                    return;
+                }
+
+                // Filtrar SOLO productos marcados como "temporada"
+                let productosTemporada = todosLosProductos.filter(product => {
+                    const categorias = product.categoriasSliders || {};
+                    return categorias.temporada === true;
+                });
+                
+                console.log('Productos filtrados como "temporada":', productosTemporada.length); // Debug
+                console.log('Productos de temporada:', productosTemporada.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
+                
+                if (productosTemporada.length === 0) {
+                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Colección Temporada". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    return;
+                }
+
+                // Mostrar solo los primeros 3 productos de temporada centrados
+                const productosAMostrar = productosTemporada.slice(0, 3);
+                console.log('Productos a mostrar (primeros 3):', productosAMostrar.length); // Debug
+                console.log('Productos finales:', productosAMostrar.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
+                
+                slider2.innerHTML = productosAMostrar.map((product) => {
+                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
+                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    return `
+                        <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                            <div class="product-image-container">
+                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
+                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                            </div>
+                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                        </div>
+                    `;
+                }).join('');
+            }
+
 // Touch/swipe support for mobile
 let touchStartX = 0;
 let touchEndX = 0;

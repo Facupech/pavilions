@@ -238,142 +238,21 @@
     </script>
     
     <script>
-        // Cargar productos desde localStorage y mostrarlos dinámicamente
-        class ProductLoader {
-            constructor() {
-                this.products = this.loadProducts();
-                this.init();
-            }
-
-            loadProducts() {
-                const stored = localStorage.getItem('pavilions_products');
-                console.log('Productos en localStorage:', stored);
-                const products = stored ? JSON.parse(stored) : [];
-                console.log('Productos parseados:', products);
-                return products;
-            }
-
-            init() {
-                this.renderSlider1(); // Nuevos Ingresos
-                this.renderSlider2(); // Colección Temporada
-            }
-
-            renderSlider1() {
-                const slider1 = document.getElementById('slider1');
-                if (!slider1) return;
-
-                // Obtener TODOS los productos
-                let todosLosProductos = this.products;
-                
-                if (todosLosProductos.length === 0) {
-                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados. <a href="admin.html" style="color: #000; font-weight: bold;">Agregar productos</a></p>';
-                    return;
-                }
-
-                // Filtrar SOLO productos marcados como "nuevo"
-                let productosNuevos = todosLosProductos.filter(product => {
-                    const categorias = product.categoriasSliders || {};
-                    return categorias.nuevo === true;
-                });
-                
-                if (productosNuevos.length === 0) {
-                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Nuevos Ingresos". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
-                    return;
-                }
-
-                // Si hay menos de 3 productos nuevos, repetir hasta tener 3
-                if (productosNuevos.length < 3) {
-                    const productosRepetidos = [];
-                    let index = 0;
-                    while (productosRepetidos.length < 3) {
-                        productosRepetidos.push(productosNuevos[index]);
-                        index = (index + 1) % productosNuevos.length;
-                    }
-                    productosNuevos = productosRepetidos;
-                }
-
-                // Mostrar solo 3 productos nuevos centrados
-                slider1.innerHTML = productosNuevos.map((product) => {
-                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
-                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
-                    return `
-                        <div class="product-card" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
-                            <div class="product-image-container">
-                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
-                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
-                            </div>
-                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
-                        </div>
-                    `;
-                }).join('');
-            }
-
-            renderSlider2() {
-                const slider2 = document.getElementById('slider2');
-                if (!slider2) return;
-
-                // Obtener TODOS los productos
-                let todosLosProductos = this.products;
-                
-                if (todosLosProductos.length === 0) {
-                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados para la colección.</p>';
-                    return;
-                }
-
-                // Filtrar SOLO productos marcados como "temporada"
-                let productosTemporada = todosLosProductos.filter(product => {
-                    const categorias = product.categoriasSliders || {};
-                    return categorias.temporada === true;
-                });
-                
-                if (productosTemporada.length === 0) {
-                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Colección Temporada". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
-                    return;
-                }
-
-                // Si hay menos de 3 productos de temporada, repetir hasta tener 3
-                if (productosTemporada.length < 3) {
-                    const productosRepetidos = [];
-                    let index = 0;
-                    while (productosRepetidos.length < 3) {
-                        productosRepetidos.push(productosTemporada[index]);
-                        index = (index + 1) % productosTemporada.length;
-                    }
-                    productosTemporada = productosRepetidos;
-                }
-
-                // Mostrar solo 3 productos de temporada centrados
-                slider2.innerHTML = productosTemporada.map((product) => {
-                    const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
-                    const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
-                    return `
-                        <div class="product-card" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
-                            <div class="product-image-container">
-                                <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
-                                <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
-                            </div>
-                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
         // Modificar openProduct para que funcione con productos dinámicos
         function openProduct(productId) {
             const products = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
             const product = products.find(p => p.id === productId);
             
             if (product) {
-                // Guardar producto seleccionado en localStorage para que producto.html lo lea
-                localStorage.setItem('selected_product', JSON.stringify(product));
-                window.location.href = 'producto.html';
+                window.location.href = `producto.html?id=${productId}`;
             }
         }
 
         // Inicializar cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
-            new ProductLoader();
+            // Llamar a las funciones correctas que muestran solo 3 productos
+            renderSlider1();
+            renderSlider2();
         });
     </script>
 

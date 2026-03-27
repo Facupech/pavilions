@@ -29,9 +29,12 @@
                 </div>
             </div>
             <div class="nav-cta">
-                <a href="https://wa.me/5491127641124?text=Hola,%20quiero%20m%C3%A1s%20informaci%C3%B3n%20sobre%20este%20producto%20de%20T%20PAVILIONS.%20%C2%BFLo%20tienen%20en%20otros%20colores%3F%20%C2%BFTienen%20descuento%20para%20compra%20mayorista%3F" target="_blank" class="whatsapp-btn">
-                    Consultar
-                </a>
+                <div class="cart-icon-container">
+                    <a href="carrito.html" class="cart-btn">
+                        <span class="cart-text">Carrito</span>
+                        <span class="cart-counter" id="cartCounter">0</span>
+                    </a>
+                </div>
             </div>
         </div>
     </nav>
@@ -79,31 +82,31 @@
             text-align: center;
         }
 
-        .consult-btn {
+        .add-to-cart-btn {
             background: #000000;
             color: #ffffff;
             border: none;
-            padding: 20px 60px;
-            font-size: 14px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
             width: 100%;
-            max-width: 400px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
             margin-bottom: 15px;
         }
 
-        .consult-btn:hover:not(:disabled) {
+        .add-to-cart-btn:hover:not(:disabled) {
             opacity: 0.8;
+            transform: translateY(-2px);
         }
 
-        .consult-btn:disabled {
+        .add-to-cart-btn:disabled {
             background: #cccccc;
             color: #999999;
             cursor: not-allowed;
-            opacity: 0.6;
+            transform: none;
         }
 
         /* BOTONES DE TALLE */
@@ -240,12 +243,12 @@
                         </p>
                     </div>
 
-                    <!-- BOTÓN CONSULTAR -->
+                    <!-- BOTÓN AGREGAR AL CARRITO -->
                     <div class="product-actions">
-                        <button class="consult-btn" id="consultBtn" disabled onclick="consultProduct()">
-                            CONSULTAR
+                        <button class="add-to-cart-btn" id="addToCartBtn" disabled onclick="addToCartFromProduct()">
+                            AGREGAR AL CARRITO
                         </button>
-                        <p class="consult-info">Al hacer clic se abrirá WhatsApp para consultar por este producto</p>
+                        <p class="cart-info">Selecciona un talle para agregar al carrito</p>
                     </div>
                 </div>
             `;
@@ -320,10 +323,10 @@
                 sizeError.style.display = 'none';
             }
             
-            // Habilitar botón de consultar
-            const consultBtn = document.getElementById('consultBtn');
-            if (consultBtn) {
-                consultBtn.disabled = false;
+            // Habilitar botón de agregar al carrito
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            if (addToCartBtn) {
+                addToCartBtn.disabled = false;
             }
         }
 
@@ -370,7 +373,7 @@
             }
         }
 
-        function consultProduct() {
+        function addToCartFromProduct() {
             if (!selectedSize) {
                 const sizeError = document.getElementById('sizeError');
                 if (sizeError) {
@@ -379,12 +382,38 @@
                 return;
             }
             
-            const productName = currentProduct.nombre;
-            const sizeText = selectedSize === 'unico' ? 'Talle Único' : selectedSize;
-            const message = `Hola, quiero consultar por el producto "${productName}" en talle ${sizeText}. ¿Lo tienen disponible?`;
+            console.log('🛒 Agregando al carrito desde página de producto'); // Debug
+            console.log('Producto:', currentProduct.nombre); // Debug
+            console.log('Talle seleccionado:', selectedSize); // Debug
             
-            const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            // Crear item del carrito con el talle seleccionado
+            const cartItem = {
+                productId: currentProduct.id,
+                nombre: currentProduct.nombre,
+                precio: currentProduct.precio,
+                foto: currentProduct.foto || (currentProduct.fotos && currentProduct.fotos.length > 0 ? currentProduct.fotos[0].data : ''),
+                quantity: 1,
+                categoria: currentProduct.categoria,
+                talleSeleccionado: selectedSize
+            };
+            
+            // Agregar al carrito usando el sistema global
+            if (typeof cartManager !== 'undefined') {
+                cartManager.addToCartWithSize(currentProduct.id, selectedSize);
+            } else {
+                // Fallback si cartManager no está disponible
+                let cart = JSON.parse(localStorage.getItem('pavilions_cart') || '[]');
+                const existingItem = cart.find(item => item.productId === currentProduct.id && item.talleSeleccionado === selectedSize);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cart.push(cartItem);
+                }
+                
+                localStorage.setItem('pavilions_cart', JSON.stringify(cart));
+                showToast(`${currentProduct.nombre} (${selectedSize}) agregado al carrito 🛒`, 'success');
+            }
         }
 
         // Cargar producto al iniciar la página

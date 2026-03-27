@@ -537,4 +537,341 @@ document.addEventListener('DOMContentLoaded', function() {
         localStorage.removeItem('pavilions_banners');
         location.reload();
     }
+    
+    // Inicializar carrito
+    updateCartUI();
 });
+
+// SISTEMA DE CARRITO
+class CartManager {
+    constructor() {
+        this.cart = this.loadCart();
+    }
+
+    loadCart() {
+        const savedCart = localStorage.getItem('pavilions_cart');
+        return savedCart ? JSON.parse(savedCart) : [];
+    }
+
+    saveCart() {
+        localStorage.setItem('pavilions_cart', JSON.stringify(this.cart));
+        updateCartUI();
+    }
+
+    addToCart(productId) {
+        console.log('🛒 Agregando producto al carrito:', productId); // Debug
+        
+        // Obtener todos los productos
+        const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+        const product = allProducts.find(p => p.id === productId);
+        
+        if (!product) {
+            console.error('❌ Producto no encontrado:', productId);
+            showToast('Producto no encontrado', 'error');
+            return;
+        }
+
+        // Verificar si ya está en el carrito
+        const existingItem = this.cart.find(item => item.productId === productId);
+        
+        if (existingItem) {
+            // Si ya existe, incrementar cantidad
+            existingItem.quantity += 1;
+            console.log('📦 Producto ya en carrito, incrementando cantidad:', existingItem.quantity);
+        } else {
+            // Si no existe, agregar nuevo item
+            const cartItem = {
+                productId: product.id,
+                nombre: product.nombre,
+                precio: product.precio,
+                foto: product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : ''),
+                quantity: 1,
+                categoria: product.categoria
+            };
+            this.cart.push(cartItem);
+            console.log('🆕 Nuevo producto agregado al carrito:', cartItem);
+        }
+
+        this.saveCart();
+        this.showAddToCartFeedback(product.nombre);
+    }
+
+    addToCartWithSize(productId, selectedSize) {
+        console.log('🛒 Agregando producto con talla al carrito:', productId, 'talle:', selectedSize); // Debug
+        
+        // Obtener todos los productos
+        const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+        const product = allProducts.find(p => p.id === productId);
+        
+        if (!product) {
+            console.error('❌ Producto no encontrado:', productId);
+            showToast('Producto no encontrado', 'error');
+            return;
+        }
+
+        // Verificar stock disponible
+        const stockDisponible = this.getStockForSize(product, selectedSize);
+        if (stockDisponible <= 0) {
+            console.error('❌ Sin stock disponible:', selectedSize);
+            showToast('Sin stock disponible para este talle', 'error');
+            return;
+        }
+
+        // Buscar si ya existe el mismo producto con el mismo talle
+        const existingItem = this.cart.find(item => item.productId === productId && item.talleSeleccionado === selectedSize);
+        
+        if (existingItem) {
+            // Verificar si podemos agregar más (no superar stock)
+            const nuevaCantidad = existingItem.quantity + 1;
+            if (nuevaCantidad > stockDisponible) {
+                console.error('❌ Stock insuficiente:', nuevaCantidad, 'disponible:', stockDisponible);
+                showToast(`Solo hay ${stockDisponible} unidades disponibles`, 'error');
+                return;
+            }
+            
+            // Si hay stock, incrementar cantidad
+            existingItem.quantity = nuevaCantidad;
+            console.log('📦 Producto con mismo talle ya en carrito, incrementando cantidad:', existingItem.quantity);
+        } else {
+            // Si no existe, agregar nuevo item con talla
+            const cartItem = {
+                productId: product.id,
+                nombre: product.nombre,
+                precio: product.precio,
+                foto: product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : ''),
+                quantity: 1,
+                categoria: product.categoria,
+                talleSeleccionado: selectedSize
+            };
+            this.cart.push(cartItem);
+            console.log('🆕 Nuevo producto con talla agregado al carrito:', cartItem);
+        }
+
+        this.saveCart();
+        this.showAddToCartFeedbackWithSize(product.nombre, selectedSize);
+    }
+
+    // Método auxiliar para obtener stock de un talle específico
+    getStockForSize(product, selectedSize) {
+        if (!product || !product.stock) return 0;
+        
+        if (product.tipoTalle === 'unico') {
+            return product.stock.unico || 0;
+        } else {
+            return product.stock[selectedSize] || 0;
+        }
+    }
+
+    removeFromCart(productId) {
+        this.cart = this.cart.filter(item => item.productId !== productId);
+        this.saveCart();
+    }
+
+    updateQuantity(productId, quantity) {
+        const item = this.cart.find(item => item.productId === productId);
+        if (item) {
+            item.quantity = Math.max(1, quantity);
+            this.saveCart();
+        }
+    }
+
+    getTotalItems() {
+        return this.cart.reduce((total, item) => total + item.quantity, 0);
+    }
+
+    getTotalPrice() {
+        return this.cart.reduce((total, item) => total + (item.precio * item.quantity), 0);
+    }
+
+    showAddToCartFeedback(productName) {
+        showToast(`${productName} agregado al carrito 🛒`, 'success');
+    }
+
+    showAddToCartFeedbackWithSize(productName, selectedSize) {
+        showToast(`${productName} (${selectedSize}) agregado al carrito 🛒`, 'success');
+    }
+}
+
+// Instancia global del carrito
+const cartManager = new CartManager();
+
+// Función global para agregar al carrito
+function addToCart(productId) {
+    console.log('🛒 Click en agregar al carrito:', productId); // Debug
+    cartManager.addToCart(productId);
+}
+
+// Función para actualizar UI del carrito
+function updateCartUI() {
+    const totalItems = cartManager.getTotalItems();
+    console.log('🛒 Actualizando UI del carrito, total items:', totalItems); // Debug
+    
+    // Actualizar contador en navbar
+    const cartCounters = document.querySelectorAll('.cart-counter');
+    cartCounters.forEach(counter => {
+        counter.textContent = totalItems;
+        counter.style.display = totalItems > 0 ? 'flex' : 'none';
+    });
+}
+
+// Función para mostrar/ocultar mini-carrito
+function toggleCart() {
+    console.log('🛒 Toggle carrito clicked'); // Debug
+    
+    // Crear mini-carrito si no existe
+    let miniCart = document.querySelector('.mini-cart');
+    if (!miniCart) {
+        miniCart = createMiniCart();
+        document.body.appendChild(miniCart);
+    }
+    
+    // Toggle visibility
+    const isVisible = miniCart.style.display === 'block';
+    miniCart.style.display = isVisible ? 'none' : 'block';
+    
+    if (!isVisible) {
+        renderMiniCart();
+    }
+}
+
+// Crear estructura del mini-carrito
+function createMiniCart() {
+    const miniCart = document.createElement('div');
+    miniCart.className = 'mini-cart';
+    miniCart.innerHTML = `
+        <div class="mini-cart-header">
+            <h3>Carrito 🛒</h3>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="mini-cart-content" id="miniCartContent">
+            <p class="empty-cart">Tu carrito está vacío</p>
+        </div>
+        <div class="mini-cart-footer" id="miniCartFooter" style="display: none;">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0</span>
+            </div>
+            <button class="checkout-btn" onclick="goToCheckout()">Finalizar compra</button>
+        </div>
+    `;
+    return miniCart;
+}
+
+// Renderizar contenido del mini-carrito
+function renderMiniCart() {
+    const cart = cartManager.cart;
+    const content = document.getElementById('miniCartContent');
+    const footer = document.getElementById('miniCartFooter');
+    const total = document.getElementById('cartTotal');
+    
+    if (!content || !footer || !total) return;
+    
+    if (cart.length === 0) {
+        content.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
+        footer.style.display = 'none';
+        return;
+    }
+    
+    // Renderizar productos
+    content.innerHTML = cart.map(item => `
+        <div class="cart-item">
+            <img src="${item.foto}" alt="${item.nombre}" class="cart-item-img">
+            <div class="cart-item-info">
+                <h4>${item.nombre}</h4>
+                <p class="cart-item-details">
+                    ${item.talleSeleccionado ? `Talle: ${item.talleSeleccionado}` : ''}
+                    <span>Cant: ${item.quantity}</span>
+                </p>
+                <p class="cart-item-price">$${(item.precio * item.quantity).toLocaleString('es-AR')}</p>
+            </div>
+            <button class="remove-item" onclick="removeFromCart('${item.productId}', '${item.talleSeleccionado || ''}')">×</button>
+        </div>
+    `).join('');
+    
+    // Mostrar footer con total
+    const totalPrice = cartManager.getTotalPrice();
+    total.textContent = `$${totalPrice.toLocaleString('es-AR')}`;
+    footer.style.display = 'block';
+}
+
+// Eliminar del carrito
+function removeFromCart(productId, selectedSize) {
+    console.log('🗑️ Eliminando del carrito:', productId, 'talle:', selectedSize); // Debug
+    
+    if (selectedSize) {
+        // Eliminar producto con talla específica
+        cartManager.cart = cartManager.cart.filter(item => 
+            !(item.productId === productId && item.talleSeleccionado === selectedSize)
+        );
+    } else {
+        // Eliminar todos los productos con ese ID
+        cartManager.cart = cartManager.cart.filter(item => item.productId !== productId);
+    }
+    
+    cartManager.saveCart();
+    
+    // Actualizar UI si estamos en la página del carrito
+    if (window.location.pathname.includes('carrito.html')) {
+        if (typeof renderCartItems === 'function') {
+            renderCartItems();
+        }
+        if (typeof updateCartSummary === 'function') {
+            updateCartSummary();
+        }
+    } else {
+        // Si estamos en otra página, actualizar mini-carrito
+        if (typeof renderMiniCart === 'function') {
+            renderMiniCart();
+        }
+    }
+    
+    updateCartUI();
+}
+
+// Ir a checkout (por ahora redirige a WhatsApp)
+function goToCheckout() {
+    const cart = cartManager.cart;
+    if (cart.length === 0) return;
+    
+    // Crear mensaje para WhatsApp
+    const message = cart.map(item => {
+        const sizeText = item.talleSeleccionado ? ` (${item.talleSeleccionado})` : '';
+        return `${item.nombre}${sizeText} - Cant: ${item.quantity} - $${(item.precio * item.quantity).toLocaleString('es-AR')}`;
+    }).join('\n');
+    
+    const total = cartManager.getTotalPrice();
+    const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y envío?`;
+    
+    const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(fullMessage)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    // Cerrar mini-carrito
+    toggleCart();
+}
+
+// Sistema de notificaciones toast
+function showToast(message, type = 'success') {
+    // Crear elemento toast si no existe
+    let toast = document.querySelector('.toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast';
+        document.body.appendChild(toast);
+    }
+
+    toast.textContent = message;
+    toast.className = `toast ${type}`;
+    
+    // Mostrar con animación
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+
+    // Ocultar después de 3 segundos
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            toast.style.display = 'none';
+        }, 300);
+    }, 3000);
+}

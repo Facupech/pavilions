@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T PAVILIONS - Carrito</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;">T PAVILIONS</a></h1>
+            </div>
+            <div class="nav-menu">
+                <div class="dropdown">
+                    <a href="#" class="nav-link dropdown-toggle">Productos</a>
+                    <div class="dropdown-menu">
+                        <a href="remeras.html" class="dropdown-item">Remeras</a>
+                        <a href="hoodies.html" class="dropdown-item">Hoodies</a>
+                        <a href="pantalones.html" class="dropdown-item">Pantalones</a>
+                        <a href="accesorios.html" class="dropdown-item">Accesorios</a>
+                        <a href="todos.html" class="dropdown-item">Todos</a>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-cta">
+                <div class="cart-icon-container">
+                    <a href="#" class="cart-btn" onclick="toggleCart()">
+                        <span class="cart-text">Carrito</span>
+                        <span class="cart-counter" id="cartCounter">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CARRITO PAGE -->
+    <main class="cart-page">
+        <div class="container">
+            <div class="cart-header">
+                <h1>Carrito de Compras 🛒</h1>
+                <p class="cart-subtitle">Revisá y gestioná tus productos seleccionados</p>
+            </div>
+
+            <div class="cart-layout">
+                <!-- LISTA DE PRODUCTOS -->
+                <div class="cart-items-section">
+                    <div id="cartItems">
+                        <!-- Los productos se cargarán dinámicamente aquí -->
+                    </div>
+                    
+                    <!-- CARRITO VACÍO -->
+                    <div id="emptyCart" class="empty-cart-section" style="display: none;">
+                        <div class="empty-cart-content">
+                            <h2>Tu carrito está vacío</h2>
+                            <p>¡No tenés productos en tu carrito todavía!</p>
+                            <a href="index.html" class="continue-shopping-btn">Seguir comprando</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESUMEN Y CHECKOUT -->
+                <div class="cart-summary">
+                    <div class="summary-card">
+                        <h3>Resumen del Pedido</h3>
+                        
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0</span>
+                        </div>
+                        
+                        <div class="summary-row">
+                            <span>Envío</span>
+                            <span id="shipping">A calcular</span>
+                        </div>
+                        
+                        <div class="summary-divider"></div>
+                        
+                        <div class="summary-row total">
+                            <span>Total</span>
+                            <span id="total">$0</span>
+                        </div>
+
+                        <div class="checkout-actions">
+                            <button class="continue-shopping-btn" onclick="window.location.href='index.html'">
+                                Seguir comprando
+                            </button>
+                            <button class="checkout-btn" id="checkoutBtn" onclick="proceedToCheckout()">
+                                Finalizar compra
+                            </button>
+                        </div>
+
+                        <div class="payment-methods">
+                            <p>Métodos de pago aceptados:</p>
+                            <div class="payment-icons">
+                                <span>💳</span> Tarjetas
+                                <span>📱</span> Mercado Pago
+                                <span>💰</span> Transferencia
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- BANNER FINAL + FOOTER -->
+    <section class="banner-footer">
+        <div class="banner-footer-image">
+            <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Banner Final">
+            <div class="banner-footer-overlay">
+                <div class="banner-footer-content">
+                    <p>DESDE EL MINUTO 0</p>
+                    <div class="footer-info">
+                        <div class="footer-contact">
+                            <h3>Contacto</h3>
+                            <a href="https://wa.me/5491127641124" target="_blank" class="whatsapp-link">
+                                WhatsApp: +54 9 112764-1124
+                            </a>
+                        </div>
+                        <div class="footer-social">
+                            <h3>Redes</h3>
+                            <a href="https://instagram.com/the.pavilions32" target="_blank">Instagram</a>
+                            <a href="https://youtube.com/@THEPAVILIONS32" target="_blank">YouTube</a>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2024 Todos los derechos reservados.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/app.js"></script>
+    <script>
+        // Cargar y renderizar el carrito
+        function loadCart() {
+            console.log('🛒 Cargando página del carrito'); // Debug
+            
+            renderCartItems();
+            updateCartSummary();
+            updateCartUI();
+        }
+
+        // Renderizar items del carrito
+        function renderCartItems() {
+            const cart = cartManager.cart;
+            const container = document.getElementById('cartItems');
+            const emptyCart = document.getElementById('emptyCart');
+            
+            if (!container || !emptyCart) return;
+            
+            if (cart.length === 0) {
+                container.style.display = 'none';
+                emptyCart.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'block';
+            emptyCart.style.display = 'none';
+            
+            container.innerHTML = cart.map((item, index) => `
+                <div class="cart-item-card">
+                    <div class="cart-item-image">
+                        <img src="${item.foto}" alt="${item.nombre}">
+                    </div>
+                    
+                    <div class="cart-item-details">
+                        <h3>${item.nombre}</h3>
+                        <p class="item-category">${item.categoria}</p>
+                        <p class="item-size">Talle: ${item.talleSeleccionado || 'N/A'}</p>
+                        <p class="item-stock">Stock disponible: ${getStockForSize(getProductById(item.productId), item.talleSeleccionado || '')} unidades</p>
+                        <p class="item-price">$${item.precio.toLocaleString('es-AR')}</p>
+                    </div>
+                    
+                    <div class="cart-item-quantity">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn" onclick="updateQuantity('${item.productId}', '${item.talleSeleccionado || ''}', ${item.quantity - 1})" 
+                                    ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                            <span class="quantity-display">${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateQuantity('${item.productId}', '${item.talleSeleccionado || ''}', ${item.quantity + 1})">+</button>
+                        </div>
+                    </div>
+                    
+                    <div class="cart-item-subtotal">
+                        <p class="subtotal-price">$${(item.precio * item.quantity).toLocaleString('es-AR')}</p>
+                        <button class="remove-item-btn" onclick="removeFromCart('${item.productId}', '${item.talleSeleccionado || ''}')">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Actualizar cantidad
+        function updateQuantity(productId, selectedSize, newQuantity) {
+            if (newQuantity < 1) return;
+            
+            console.log('🔄 Actualizando cantidad:', productId, 'talle:', selectedSize, 'nueva cantidad:', newQuantity); // Debug
+            
+            // Obtener el producto para verificar stock
+            const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            const product = allProducts.find(p => p.id === productId);
+            
+            if (!product) {
+                console.error('❌ Producto no encontrado:', productId);
+                return;
+            }
+            
+            // Verificar stock disponible
+            const stockDisponible = getStockForSize(product, selectedSize);
+            if (newQuantity > stockDisponible) {
+                console.error('❌ Stock insuficiente:', newQuantity, 'disponible:', stockDisponible);
+                showToast(`Solo hay ${stockDisponible} unidades disponibles`, 'error');
+                return;
+            }
+            
+            const item = cartManager.cart.find(item => 
+                item.productId === productId && item.talleSeleccionado === selectedSize
+            );
+            
+            if (item) {
+                item.quantity = newQuantity;
+                cartManager.saveCart();
+                renderCartItems();
+                updateCartSummary();
+                updateCartUI();
+            }
+        }
+
+        // Método auxiliar para obtener stock de un talle específico
+        function getStockForSize(product, selectedSize) {
+            if (!product || !product.stock) return 0;
+            
+            if (product.tipoTalle === 'unico') {
+                return product.stock.unico || 0;
+            } else {
+                return product.stock[selectedSize] || 0;
+            }
+        }
+
+        // Método auxiliar para obtener producto por ID
+        function getProductById(productId) {
+            const allProducts = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            return allProducts.find(p => p.id === productId);
+        }
+
+        // Actualizar resumen
+        function updateCartSummary() {
+            const cart = cartManager.cart;
+            const subtotalEl = document.getElementById('subtotal');
+            const shippingEl = document.getElementById('shipping');
+            const totalEl = document.getElementById('total');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+            
+            if (!subtotalEl || !shippingEl || !totalEl || !checkoutBtn) return;
+            
+            if (cart.length === 0) {
+                subtotalEl.textContent = '$0';
+                shippingEl.textContent = '-';
+                totalEl.textContent = '$0';
+                checkoutBtn.disabled = true;
+                return;
+            }
+            
+            const subtotal = cartManager.getTotalPrice();
+            const shipping = subtotal > 10000 ? 0 : 800; // Envío gratis > $10.000
+            const total = subtotal + shipping;
+            
+            subtotalEl.textContent = `$${subtotal.toLocaleString('es-AR')}`;
+            shippingEl.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toLocaleString('es-AR')}`;
+            totalEl.textContent = `$${total.toLocaleString('es-AR')}`;
+            checkoutBtn.disabled = false;
+        }
+
+        // Proceder al checkout
+        function proceedToCheckout() {
+            const cart = cartManager.cart;
+            if (cart.length === 0) return;
+            
+            console.log('🚀 Procediendo al checkout'); // Debug
+            
+            // Por ahora redirigimos a WhatsApp como en el mini-carrito
+            const message = cart.map(item => {
+                const sizeText = item.talleSeleccionado ? ` (${item.talleSeleccionado})` : '';
+                return `${item.nombre}${sizeText} - Cant: ${item.quantity} - $${(item.precio * item.quantity).toLocaleString('es-AR')}`;
+            }).join('\n');
+            
+            const subtotal = cartManager.getTotalPrice();
+            const shipping = subtotal > 10000 ? 0 : 800;
+            const total = subtotal + shipping;
+            
+            const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nSubtotal: $${subtotal.toLocaleString('es-AR')}\nEnvío: ${shipping === 0 ? 'Gratis' : '$' + shipping.toLocaleString('es-AR')}\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y envío?`;
+            
+            const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(fullMessage)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Inicializar cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', loadCart);
+    </script>
+
+    <style>
+        /* CARRITO PAGE STYLES */
+        .cart-page {
+            padding: 40px 0;
+            min-height: 60vh;
+        }
+
+        .cart-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .cart-header h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+
+        .cart-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin: 0;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* ITEMS SECTION */
+        .cart-items-section {
+            min-height: 400px;
+        }
+
+        .cart-item-card {
+            display: grid;
+            grid-template-columns: 120px 1fr 120px 140px;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            margin-bottom: 16px;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .cart-item-card:hover {
+            border-color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 0;
+        }
+
+        .cart-item-details h3 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #000000;
+            margin: 0 0 8px 0;
+        }
+
+        .item-category {
+            font-size: 14px;
+            color: #666;
+            margin: 0 0 4px 0;
+        }
+
+        .item-size {
+            font-size: 14px;
+            color: #000000;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0;
+        }
+
+        .item-stock {
+            font-size: 12px;
+            color: #666;
+            margin: 4px 0;
+            font-weight: 500;
+        }
+
+        /* QUANTITY CONTROLS */
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            overflow: hidden;
+        }
+
+        .quantity-btn {
+            background: #ffffff;
+            border: none;
+            width: 32px;
+            height: 32px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover:not(:disabled) {
+            background: #f0f0f0;
+        }
+
+        .quantity-btn:disabled {
+            background: #f5f5f5;
+            color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .quantity-display {
+            width: 40px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: #000000;
+        }
+
+        .subtotal-price {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0 0 8px 0;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: #ff4444;
+            font-size: 12px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border: 1px solid #ff4444;
+            border-radius: 0;
+            transition: all 0.3s ease;
+        }
+
+        .remove-item-btn:hover {
+            background: #ff4444;
+            color: #ffffff;
+        }
+
+        /* EMPTY CART */
+        .empty-cart-section {
+            text-align: center;
+            padding: 80px 40px;
+        }
+
+        .empty-cart-content h2 {
+            font-size: 24px;
+            color: #000000;
+            margin-bottom: 16px;
+        }
+
+        .empty-cart-content p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        .continue-shopping-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #000000;
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+
+        .continue-shopping-btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        /* SUMMARY */
+        .cart-summary {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 24px;
+            border-radius: 0;
+        }
+
+        .summary-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+            margin: 0 0 20px 0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .summary-divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 16px 0;
+        }
+
+        .checkout-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .checkout-btn {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkout-btn:hover:not(:disabled) {
+            background: #333333;
+            transform: translateY(-1px);
+        }
+
+        .checkout-btn:disabled {
+            background: #cccccc;
+            color: #999999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .payment-methods {
+            text-align: center;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .payment-methods p {
+            font-size: 12px;
+            color: #666;
+            margin: 0 0 8px 0;
+        }
+
+        .payment-icons {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 968px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .cart-summary {
+                position: static;
+            }
+
+            .cart-item-card {
+                grid-template-columns: 80px 1fr;
+                gap: 16px;
+            }
+
+            .cart-item-quantity,
+            .cart-item-subtotal {
+                grid-column: 2;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-top: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-page {
+                padding: 20px 0;
+            }
+
+            .cart-header h1 {
+                font-size: 24px;
+            }
+
+            .cart-item-card {
+                padding: 16px;
+            }
+
+            .cart-item-image img {
+                height: 80px;
+            }
+        }
+    </style>
+</body>
+</html>

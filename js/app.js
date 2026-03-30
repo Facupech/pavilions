@@ -84,7 +84,7 @@ function renderSlider1() {
                 console.log('Productos:', todosLosProductos.map(p => ({id: p.id, nombre: p.nombre, categorias: p.categoriasSliders}))); // Debug
                 
                 if (todosLosProductos.length === 0) {
-                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos cargados. <a href="admin.html" style="color: #000; font-weight: bold;">Agregar productos</a></p>';
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos disponibles.</p>';
                     return;
                 }
 
@@ -98,7 +98,7 @@ function renderSlider1() {
                 console.log('Productos nuevos:', productosNuevos.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
                 
                 if (productosNuevos.length === 0) {
-                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Nuevos Ingresos". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    slider1.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos nuevos disponibles.</p>';
                     return;
                 }
 
@@ -147,7 +147,7 @@ function renderSlider2() {
                 console.log('Productos de temporada:', productosTemporada.map(p => ({id: p.id, nombre: p.nombre}))); // Debug
                 
                 if (productosTemporada.length === 0) {
-                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos marcados como "Colección Temporada". <a href="admin.html" style="color: #000; font-weight: bold;">Administrar productos</a></p>';
+                    slider2.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">No hay productos de temporada disponibles.</p>';
                     return;
                 }
 
@@ -374,8 +374,7 @@ class BannerManager {
                 <div class="carousel-slide active">
                     <div class="banner-placeholder">
                         <h2>No hay banners activos</h2>
-                        <p>Configura tus banners en el panel de administración</p>
-                        <a href="admin.html" style="display: inline-block; margin-top: 15px; padding: 12px 30px; background: white; color: #667eea; text-decoration: none; font-weight: 600; border-radius: 5px;">Ir al Admin</a>
+                        <p>Próximamente nuevos banners</p>
                     </div>
                 </div>
             `;

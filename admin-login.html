@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - T PAVILIONS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f8f8 0%, #ffffff 100%);
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 60px 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .login-header {
+            margin-bottom: 40px;
+        }
+        
+        .login-header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .login-header p {
+            color: #666666;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            border: 1px solid #e0e0e0;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+        }
+        
+        .login-btn:hover {
+            background: #333333;
+            transform: translateY(-1px);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .error-message {
+            background: #ff4444;
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 0;
+            font-size: 14px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            color: #666666;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+        
+        .back-link:hover {
+            color: #000000;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1>T PAVILIONS</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                Contraseña incorrecta. Inténtalo nuevamente.
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        required 
+                        placeholder="Ingresá tu contraseña"
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <button type="submit" class="login-btn">
+                    Ingresar
+                </button>
+            </form>
+            
+            <a href="index.html" class="back-link">
+                ← Volver al sitio
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Contraseña correcta: AdminRacingPlatense32_
+            const correctPassword = 'AdminRacingPlatense32_';
+            
+            if (password === correctPassword) {
+                // Guardar sesión en localStorage
+                localStorage.setItem('adminAuth', 'true');
+                localStorage.setItem('adminAuthTime', Date.now());
+                
+                // Redirigir al panel de administración
+                window.location.href = 'admin.html';
+            } else {
+                // Mostrar error
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
+                
+                // Ocultar error después de 3 segundos
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+        
+        // Verificar si ya está autenticado
+        document.addEventListener('DOMContentLoaded', function() {
+            const auth = localStorage.getItem('adminAuth');
+            const authTime = localStorage.getItem('adminAuthTime');
+            
+            // Sesión válida por 2 horas
+            if (auth === 'true' && authTime && (Date.now() - parseInt(authTime)) < 7200000) {
+                window.location.href = 'admin.html';
+            }
+        });
+    </script>
+</body>
+</html>

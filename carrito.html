@@ -76,7 +76,7 @@
                         
                         <div class="summary-row">
                             <span>Envío</span>
-                            <span id="shipping">A calcular</span>
+                            <span id="shipping">No incluido</span>
                         </div>
                         
                         <div class="summary-divider"></div>
@@ -270,11 +270,11 @@
             }
             
             const subtotal = cartManager.getTotalPrice();
-            const shipping = subtotal > 10000 ? 0 : 800; // Envío gratis > $10.000
-            const total = subtotal + shipping;
+            // El envío no está incluido en el total
+            const total = subtotal;
             
             subtotalEl.textContent = `$${subtotal.toLocaleString('es-AR')}`;
-            shippingEl.textContent = shipping === 0 ? 'Gratis' : `$${shipping.toLocaleString('es-AR')}`;
+            shippingEl.textContent = 'No incluido';
             totalEl.textContent = `$${total.toLocaleString('es-AR')}`;
             checkoutBtn.disabled = false;
         }
@@ -293,10 +293,9 @@
             }).join('\n');
             
             const subtotal = cartManager.getTotalPrice();
-            const shipping = subtotal > 10000 ? 0 : 800;
-            const total = subtotal + shipping;
+            const total = subtotal;
             
-            const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nSubtotal: $${subtotal.toLocaleString('es-AR')}\nEnvío: ${shipping === 0 ? 'Gratis' : '$' + shipping.toLocaleString('es-AR')}\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y envío?`;
+            const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nSubtotal: $${subtotal.toLocaleString('es-AR')}\nEnvío: No incluido\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y el costo del envío a mi domicilio?`;
             
             const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(fullMessage)}`;
             window.open(whatsappUrl, '_blank');

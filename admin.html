@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - T PAVILIONS</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script>
+        // Verificar autenticación antes de cargar la página
+        (function() {
+            const auth = localStorage.getItem('adminAuth');
+            const authTime = localStorage.getItem('adminAuthTime');
+            
+            // Sesión válida por 2 horas (7200000 ms)
+            if (auth !== 'true' || !authTime || (Date.now() - parseInt(authTime)) >= 7200000) {
+                // Limpiar datos de sesión expirada
+                localStorage.removeItem('adminAuth');
+                localStorage.removeItem('adminAuthTime');
+                
+                // Redirigir al login
+                window.location.href = 'admin-login.html';
+                return;
+            }
+        })();
+    </script>
     <style>
         /* Importar estilos principales */
         .admin-container {
@@ -21,6 +39,30 @@
             margin-bottom: 40px;
             border-radius: 10px;
             text-align: center;
+            position: relative;
+        }
+        
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 8px 16px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            border-radius: 0;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
         }
         
         .admin-header h1 {
@@ -566,6 +608,7 @@
 
     <div class="admin-container">
         <div class="admin-header">
+            <a href="#" class="logout-btn" onclick="logout()">Cerrar Sesión</a>
             <h1><span class="icon-settings">⚙</span> Panel de Administración</h1>
             <p>Gestionar productos, stock y catálogo</p>
         </div>
@@ -1533,6 +1576,15 @@
         // Inicializar los sistemas
         const productManager = new ProductManager();
         const bannerManager = new BannerManager();
+        
+        // Función para cerrar sesión
+        function logout() {
+            if (confirm('¿Estás seguro de que querés cerrar sesión?')) {
+                localStorage.removeItem('adminAuth');
+                localStorage.removeItem('adminAuthTime');
+                window.location.href = 'admin-login.html';
+            }
+        }
     </script>
 </body>
 </html>

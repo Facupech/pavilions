@@ -508,11 +508,11 @@ body {
 }
 
 .slider-arrow.prev {
-    left: -80px;
+    left: 10px;
 }
 
 .slider-arrow.next {
-    right: -80px;
+    right: 10px;
 }
 
 .slider-arrow:hover {

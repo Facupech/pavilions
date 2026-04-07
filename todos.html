@@ -55,7 +55,7 @@
     <!-- BANNER FINAL + FOOTER -->
     <section class="banner-footer">
         <div class="banner-footer-image">
-            <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Banner Final">
+            <img src="fotos banner/banner 1.jpg" alt="Banner Final">
             <div class="banner-footer-overlay">
                 <div class="banner-footer-content">
                     <p>DESDE EL MINUTO 0</p>
@@ -200,10 +200,35 @@
             }
         }
 
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
+        /* ESTILOS PARA PRODUCTOS SIN STOCK */
+        .products-grid .product-card.out-of-stock {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .products-grid .product-card.out-of-stock img {
+            filter: blur(3px);
+            opacity: 0.7;
+        }
+
+        .products-grid .product-card.out-of-stock:hover {
+            transform: none;
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
         }
     </style>
 </head>
@@ -272,12 +297,14 @@
                     const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
                     const precio = product.precio ? `$${product.precio.toLocaleString('es-AR')}` : 'Precio no disponible';
                     const stock = this.getStockText(product);
+                    const hasStock = this.hasStock(product);
                     
                     return `
-                        <div class="product-card" onclick="openProduct('${product.id}')">
+                        <div class="product-card ${!hasStock ? 'out-of-stock' : ''}" onclick="${hasStock ? `openProduct('${product.id}')` : ''}">
                             <div class="product-image-container">
                                 <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
                                 <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                                ${!hasStock ? '<div class="out-of-stock-overlay">Sin Stock</div>' : ''}
                             </div>
                             <h3>${product.nombre}</h3>
                             <div class="product-info">
@@ -295,6 +322,17 @@
                     return `Talle único: ${product.stock.unico || 0} unidades`;
                 } else {
                     return `Stock: S:${product.stock.S || 0} M:${product.stock.M || 0} L:${product.stock.L || 0} XL:${product.stock.XL || 0}`;
+                }
+            }
+
+            hasStock(product) {
+                if (product.tipoTalle === 'unico') {
+                    return (product.stock.unico || 0) > 0;
+                } else {
+                    return (product.stock.S || 0) > 0 || 
+                           (product.stock.M || 0) > 0 || 
+                           (product.stock.L || 0) > 0 || 
+                           (product.stock.XL || 0) > 0;
                 }
             }
         }

@@ -60,13 +60,15 @@ function moveSlider(sliderId, direction) {
         slider.innerHTML = productosAMostrar.map((product) => {
             const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
             const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+            const hasStockProduct = hasStock(product);
             return `
-                <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                <div class="product-card fade-in ${!hasStockProduct ? 'out-of-stock' : ''}" data-product-id="${product.id}" onclick="${hasStockProduct ? `openProduct('${product.id}')` : ''}">
                     <div class="product-image-container">
                         <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
                         <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                        ${!hasStockProduct ? '<div class="out-of-stock-overlay">Sin Stock</div>' : ''}
                     </div>
-                    <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                    <h3 onclick="${hasStockProduct ? 'event.stopPropagation(); openProduct(\'' + product.id + '\')' : ''}">${product.nombre}</h3>
                 </div>
             `;
         }).join('');
@@ -110,13 +112,15 @@ function renderSlider1() {
                 slider1.innerHTML = productosAMostrar.map((product) => {
                     const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
                     const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    const hasStockProduct = hasStock(product);
                     return `
-                        <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                        <div class="product-card fade-in ${!hasStockProduct ? 'out-of-stock' : ''}" data-product-id="${product.id}" onclick="${hasStockProduct ? `openProduct('${product.id}')` : ''}">
                             <div class="product-image-container">
                                 <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
                                 <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                                ${!hasStockProduct ? '<div class="out-of-stock-overlay">Sin Stock</div>' : ''}
                             </div>
-                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                            <h3 onclick="${hasStockProduct ? 'event.stopPropagation(); openProduct(\'' + product.id + '\')' : ''}">${product.nombre}</h3>
                         </div>
                     `;
                 }).join('');
@@ -159,13 +163,15 @@ function renderSlider2() {
                 slider2.innerHTML = productosAMostrar.map((product) => {
                     const primeraFoto = product.foto || (product.fotos && product.fotos.length > 0 ? product.fotos[0].data : '');
                     const segundaFoto = product.fotos && product.fotos.length > 1 ? product.fotos[1].data : primeraFoto;
+                    const hasStockProduct = hasStock(product);
                     return `
-                        <div class="product-card fade-in" data-product-id="${product.id}" onclick="openProduct('${product.id}')">
+                        <div class="product-card fade-in ${!hasStockProduct ? 'out-of-stock' : ''}" data-product-id="${product.id}" onclick="${hasStockProduct ? `openProduct('${product.id}')` : ''}">
                             <div class="product-image-container">
                                 <img src="${primeraFoto}" alt="${product.nombre}" class="product-img primary-img">
                                 <img src="${segundaFoto}" alt="${product.nombre}" class="product-img secondary-img">
+                                ${!hasStockProduct ? '<div class="out-of-stock-overlay">Sin Stock</div>' : ''}
                             </div>
-                            <h3 onclick="event.stopPropagation(); openProduct('${product.id}')">${product.nombre}</h3>
+                            <h3 onclick="${hasStockProduct ? 'event.stopPropagation(); openProduct(\'' + product.id + '\')' : ''}">${product.nombre}</h3>
                         </div>
                     `;
                 }).join('');
@@ -698,6 +704,18 @@ const cartManager = new CartManager();
 function addToCart(productId) {
     console.log('🛒 Click en agregar al carrito:', productId); // Debug
     cartManager.addToCart(productId);
+}
+
+// Función para verificar si un producto tiene stock
+function hasStock(product) {
+    if (product.tipoTalle === 'unico') {
+        return (product.stock.unico || 0) > 0;
+    } else {
+        return (product.stock.S || 0) > 0 || 
+               (product.stock.M || 0) > 0 || 
+               (product.stock.L || 0) > 0 || 
+               (product.stock.XL || 0) > 0;
+    }
 }
 
 // Función para actualizar UI del carrito

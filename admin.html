@@ -719,7 +719,7 @@
                 
                 <div class="form-group">
                     <label for="precio">Precio ($)</label>
-                    <input type="number" id="precio" min="0" step="100" required>
+                    <input type="number" id="precio" required>
                 </div>
                 
                 <div class="form-group">
@@ -1001,7 +1001,21 @@
             }
 
             saveProducts() {
-                localStorage.setItem('pavilions_products', JSON.stringify(this.products));
+                try {
+                    localStorage.setItem('pavilions_products', JSON.stringify(this.products));
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError') {
+                        if (confirm('El almacenamiento está lleno. ¿Querés limpiar todos los productos para liberar espacio? (Perderás los productos actuales)')) {
+                            localStorage.clear();
+                            this.products = [];
+                            this.showAlert('Almacenamiento limpiado. Podés agregar productos nuevos.');
+                        } else {
+                            this.showAlert('Error: No hay suficiente espacio de almacenamiento. Intentá con imágenes más pequeñas.');
+                        }
+                    } else {
+                        this.showAlert('Error al guardar productos: ' + error.message);
+                    }
+                }
             }
 
             saveProduct() {

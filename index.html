@@ -118,7 +118,7 @@
         <!-- BANNER FINAL + FOOTER -->
         <section class="banner-footer">
             <div class="banner-footer-image">
-                <img src="fotos banner/00c0aee0a97f57137954698fd0cfed4a.jpg" alt="Banner Final">
+                <img src="fotos banner/banner 1.jpg" alt="Banner Final">
                 <div class="banner-footer-overlay">
                     <div class="banner-footer-content">
                         <p>DESDE EL MINUTO 0</p>
@@ -363,6 +363,45 @@
 
         .product-card:hover .secondary-img {
             opacity: 1;
+        }
+
+        /* ESTILOS PARA PRODUCTOS SIN STOCK */
+        .product-card.out-of-stock {
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+        }
+
+        .product-card.out-of-stock img {
+            filter: blur(3px) !important;
+            opacity: 0.7 !important;
+        }
+
+        .product-card.out-of-stock:hover {
+            transform: none !important;
+        }
+
+        .product-card.out-of-stock:hover .primary-img {
+            opacity: 0.7 !important;
+        }
+
+        .product-card.out-of-stock:hover .secondary-img {
+            opacity: 0.7 !important;
+        }
+
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 10;
         }
     </style>
 </body>

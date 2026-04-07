@@ -731,87 +731,7 @@ function updateCartUI() {
     });
 }
 
-// Función para mostrar/ocultar mini-carrito
-function toggleCart() {
-    console.log('🛒 Toggle carrito clicked'); // Debug
-    
-    // Crear mini-carrito si no existe
-    let miniCart = document.querySelector('.mini-cart');
-    if (!miniCart) {
-        miniCart = createMiniCart();
-        document.body.appendChild(miniCart);
-    }
-    
-    // Toggle visibility
-    const isVisible = miniCart.style.display === 'block';
-    miniCart.style.display = isVisible ? 'none' : 'block';
-    
-    if (!isVisible) {
-        renderMiniCart();
-    }
-}
-
-// Crear estructura del mini-carrito
-function createMiniCart() {
-    const miniCart = document.createElement('div');
-    miniCart.className = 'mini-cart';
-    miniCart.innerHTML = `
-        <div class="mini-cart-header">
-            <h3>Carrito 🛒</h3>
-            <button class="close-cart" onclick="toggleCart()">×</button>
-        </div>
-        <div class="mini-cart-content" id="miniCartContent">
-            <p class="empty-cart">Tu carrito está vacío</p>
-        </div>
-        <div class="mini-cart-footer" id="miniCartFooter" style="display: none;">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">$0</span>
-            </div>
-            <button class="checkout-btn" onclick="goToCheckout()">Finalizar compra</button>
-        </div>
-    `;
-    return miniCart;
-}
-
-// Renderizar contenido del mini-carrito
-function renderMiniCart() {
-    const cart = cartManager.cart;
-    const content = document.getElementById('miniCartContent');
-    const footer = document.getElementById('miniCartFooter');
-    const total = document.getElementById('cartTotal');
-    
-    if (!content || !footer || !total) return;
-    
-    if (cart.length === 0) {
-        content.innerHTML = '<p class="empty-cart">Tu carrito está vacío</p>';
-        footer.style.display = 'none';
-        return;
-    }
-    
-    // Renderizar productos
-    content.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <img src="${item.foto}" alt="${item.nombre}" class="cart-item-img">
-            <div class="cart-item-info">
-                <h4>${item.nombre}</h4>
-                <p class="cart-item-details">
-                    ${item.talleSeleccionado ? `Talle: ${item.talleSeleccionado}` : ''}
-                    <span>Cant: ${item.quantity}</span>
-                </p>
-                <p class="cart-item-price">$${(item.precio * item.quantity).toLocaleString('es-AR')}</p>
-            </div>
-            <button class="remove-item" onclick="removeFromCart('${item.productId}', '${item.talleSeleccionado || ''}')">×</button>
-        </div>
-    `).join('');
-    
-    // Mostrar footer con total
-    const totalPrice = cartManager.getTotalPrice();
-    total.textContent = `$${totalPrice.toLocaleString('es-AR')}`;
-    footer.style.display = 'block';
-}
-
-// Eliminar del carrito
+// Función para eliminar del carrito
 function removeFromCart(productId, selectedSize) {
     console.log('🗑️ Eliminando del carrito:', productId, 'talle:', selectedSize); // Debug
     
@@ -845,25 +765,11 @@ function removeFromCart(productId, selectedSize) {
     updateCartUI();
 }
 
-// Ir a checkout (por ahora redirige a WhatsApp)
-function goToCheckout() {
-    const cart = cartManager.cart;
-    if (cart.length === 0) return;
-    
-    // Crear mensaje para WhatsApp
-    const message = cart.map(item => {
-        const sizeText = item.talleSeleccionado ? ` (${item.talleSeleccionado})` : '';
-        return `${item.nombre}${sizeText} - Cant: ${item.quantity} - $${(item.precio * item.quantity).toLocaleString('es-AR')}`;
-    }).join('\n');
-    
-    const total = cartManager.getTotalPrice();
-    const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y envío?`;
-    
-    const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(fullMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
-    // Cerrar mini-carrito
-    toggleCart();
+// Función para generar token único
+function generarTokenUnico() {
+    const timestamp = Date.now().toString(36);
+    const random = Math.random().toString(36).substr(2, 5);
+    return `${timestamp}-${random}`.toUpperCase();
 }
 
 // Sistema de notificaciones toast

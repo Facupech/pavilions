@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>T PAVILIONS - Carrito</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .email-link {
+            color: #ffffff !important;
+            text-decoration: none !important;
+            font-size: 14px;
+            font-weight: 300;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+        
+        .email-link:hover {
+            opacity: 1 !important;
+        }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -94,15 +108,6 @@
                                 Finalizar compra
                             </button>
                         </div>
-
-                        <div class="payment-methods">
-                            <p>Métodos de pago aceptados:</p>
-                            <div class="payment-icons">
-                                <span>💳</span> Tarjetas
-                                <span>📱</span> Mercado Pago
-                                <span>💰</span> Transferencia
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -115,17 +120,20 @@
             <img src="fotos banner/banner 1.jpg" alt="Banner Final">
             <div class="banner-footer-overlay">
                 <div class="banner-footer-content">
-                    <p>DESDE EL MINUTO 0</p>
+                    <p>Goofys not allowed</p>
                     <div class="footer-info">
                         <div class="footer-contact">
                             <h3>Contacto</h3>
                             <a href="https://wa.me/5491127641124" target="_blank" class="whatsapp-link">
                                 WhatsApp: +54 9 112764-1124
                             </a>
+                            <a href="mailto:thepavilionsofficial@gmail.com" class="email-link">
+                                Email: thepavilionsofficial@gmail.com
+                            </a>
                         </div>
                         <div class="footer-social">
                             <h3>Redes</h3>
-                            <a href="https://instagram.com/the.pavilions32" target="_blank">Instagram</a>
+                            <a href="https://instagram.com/thepavilions32" target="_blank">Instagram</a>
                             <a href="https://youtube.com/@THEPAVILIONS32" target="_blank">YouTube</a>
                         </div>
                     </div>
@@ -262,7 +270,7 @@
             
             if (cart.length === 0) {
                 subtotalEl.textContent = '$0';
-                shippingEl.textContent = '-';
+                shippingEl.textContent = 'No incluido';
                 totalEl.textContent = '$0';
                 checkoutBtn.disabled = true;
                 return;
@@ -279,22 +287,54 @@
         }
 
         // Proceder al checkout
+        // Función para generar token único
+        function generarTokenUnico() {
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).substr(2, 5);
+            return `${timestamp}-${random}`.toUpperCase();
+        }
+
         function proceedToCheckout() {
             const cart = cartManager.cart;
             if (cart.length === 0) return;
             
-            console.log('🚀 Procediendo al checkout'); // Debug
+            console.log('🚀 Procediendo al checkout con token'); // Debug
+            
+            // Generar token único para esta compra
+            const tokenCompra = generarTokenUnico();
+            
+            // Guardar información de la compra con el token
+            const compraInfo = {
+                token: tokenCompra,
+                productos: cart,
+                fecha: new Date().toISOString(),
+                estado: 'pendiente', // pendiente, confirmado, cancelado
+                timestamp: Date.now()
+            };
+            
+            // Guardar en localStorage
+            let comprasPendientes = JSON.parse(localStorage.getItem('pavilions_compras_pendientes') || '[]');
+            comprasPendientes.push(compraInfo);
+            localStorage.setItem('pavilions_compras_pendientes', JSON.stringify(comprasPendientes));
+            
+            // Vaciar el carrito después de generar el pedido
+            const cartCopy = [...cart]; // Guardar copia antes de vaciar
+            cartManager.cart = [];
+            cartManager.saveCart();
+            
+            // Mostrar mensaje de éxito
+            showToast('🛒 Pedido generado con éxito. Tu carrito ha sido vaciado.', 'success');
             
             // Por ahora redirigimos a WhatsApp como en el mini-carrito
-            const message = cart.map(item => {
+            const message = cartCopy.map(item => {
                 const sizeText = item.talleSeleccionado ? ` (${item.talleSeleccionado})` : '';
                 return `${item.nombre}${sizeText} - Cant: ${item.quantity} - $${(item.precio * item.quantity).toLocaleString('es-AR')}`;
             }).join('\n');
             
-            const subtotal = cartManager.getTotalPrice();
+            const subtotal = cartCopy.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
             const total = subtotal;
             
-            const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nSubtotal: $${subtotal.toLocaleString('es-AR')}\nEnvío: No incluido\nTOTAL: $${total.toLocaleString('es-AR')}\n\n¿Podrían confirmar disponibilidad y el costo del envío a mi domicilio?`;
+            const fullMessage = `¡Hola! Quiero realizar un pedido:\n\n${message}\n\nSubtotal: $${subtotal.toLocaleString('es-AR')}\nEnvío: No incluido\nTOTAL: $${total.toLocaleString('es-AR')}\n\n🔒 TOKEN DE CONFIRMACIÓN: ${tokenCompra}\n\n¿Podrían confirmar disponibilidad y el costo del envío a mi domicilio?`;
             
             const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(fullMessage)}`;
             window.open(whatsappUrl, '_blank');

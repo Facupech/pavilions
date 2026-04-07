@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación - T PAVILIONS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .confirmacion-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            padding-top: 120px; /* Espacio para navbar fija */
+        }
+        
+        .page-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 40px 20px;
+            margin-bottom: 60px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .page-header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        
+        .page-header p {
+            font-size: 14px;
+            opacity: 0.8;
+            letter-spacing: 1px;
+        }
+        
+        .token-section {
+            background: #f8f8f8;
+            padding: 60px 40px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 60px;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .token-section h3 {
+            font-size: 18px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+        
+        .token-input {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+            font-size: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            text-align: center;
+            letter-spacing: 2px;
+            font-weight: 400;
+            text-transform: uppercase;
+            margin: 20px 0;
+            background: #ffffff;
+            transition: border-color 0.3s ease;
+        }
+        
+        .token-input:focus {
+            border-color: #000000;
+            outline: none;
+        }
+        
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: opacity 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.8;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #000000;
+            border: 1px solid #000000;
+            padding: 15px 30px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .btn-success {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .btn-success:hover {
+            opacity: 0.8;
+        }
+        
+        .btn-danger {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .btn-danger:hover {
+            opacity: 0.8;
+        }
+        
+        .pedido-info {
+            background: #ffffff;
+            padding: 0;
+            border-radius: 10px;
+            border: 1px solid #f0f0f0;
+            margin: 40px 0;
+            display: none;
+            overflow: hidden;
+        }
+        
+        .pedido-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .pedido-header h3 {
+            font-size: 16px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+        
+        .pedido-content {
+            padding: 40px;
+        }
+        
+        .pedido-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .meta-item {
+            padding: 20px;
+            background: #f8f8f8;
+            border: 1px solid #f0f0f0;
+        }
+        
+        .meta-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .meta-value {
+            font-size: 16px;
+            font-weight: 400;
+            color: #000000;
+        }
+        
+        .productos-section h4 {
+            font-size: 16px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            color: #000000;
+        }
+        
+        .producto-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .producto-item:last-child {
+            border-bottom: none;
+        }
+        
+        .producto-nombre {
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 5px;
+        }
+        
+        .producto-detalles {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 10px;
+        }
+        
+        .producto-subtotal {
+            font-size: 16px;
+            font-weight: 400;
+            color: #000000;
+        }
+        
+        .acciones-pedido {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+        
+        .resultado-busqueda {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .error {
+            background: #fff5f5;
+            color: #d32f2f;
+            border: 1px solid #ffebee;
+        }
+        
+        .success {
+            background: #f5fff5;
+            color: #388e3c;
+            border: 1px solid #e8f5e8;
+        }
+        
+        .warning {
+            background: #fffbf0;
+            color: #f57c00;
+            border: 1px solid #fff3e0;
+        }
+        
+        .token-display {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            letter-spacing: 1px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+        
+        @media (max-width: 768px) {
+            .confirmacion-container {
+                padding: 20px 15px;
+                padding-top: 100px;
+            }
+            
+            .token-section {
+                padding: 40px 20px;
+            }
+            
+            .pedido-content {
+                padding: 20px;
+            }
+            
+            .pedido-meta {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .acciones-pedido {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1><a href="index.html" style="text-decoration: none; color: inherit;">T PAVILIONS</a></h1>
+            </div>
+            <div class="nav-menu">
+                <a href="admin.html" class="nav-link">Panel Admin</a>
+                <a href="confirmacion.html" class="nav-link">Confirmación</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="confirmacion-container">
+        <!-- Header de página -->
+        <div class="page-header">
+            <h1>🔒 Confirmación de Pedidos</h1>
+            <p>Ingrese el token del pedido para verificar y confirmar el pago</p>
+        </div>
+        
+        <!-- Sección de ingreso de token -->
+        <div class="token-section">
+            <h3>Ingrese el Token del Pedido</h3>
+            <input type="text" 
+                   id="tokenInput" 
+                   class="token-input" 
+                   placeholder="EJ: L1A2B3C4D5-XYZAB"
+                   maxlength="20"
+                   onkeyup="this.value = this.value.toUpperCase()">
+            <br>
+            <button class="btn-primary" onclick="buscarToken()">🔍 Buscar Pedido</button>
+        </div>
+
+        <!-- Resultados de búsqueda -->
+        <div id="resultadoBusqueda"></div>
+
+        <!-- Información del pedido -->
+        <div id="pedidoInfo" class="pedido-info">
+            <div class="pedido-header">
+                <h3>📦 <span id="pedidoToken"></span></h3>
+            </div>
+            
+            <div class="pedido-content">
+                <div class="pedido-meta">
+                    <div class="meta-item">
+                        <div class="meta-label">Fecha del Pedido</div>
+                        <div class="meta-value" id="pedidoFecha"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Estado Actual</div>
+                        <div class="meta-value" id="pedidoEstado"></div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-label">Total</div>
+                        <div class="meta-value" id="pedidoTotal">$0</div>
+                    </div>
+                </div>
+
+                <div class="productos-section">
+                    <h4>🛍️ Productos del Pedido</h4>
+                    <div id="productosList"></div>
+                </div>
+
+                <div class="acciones-pedido">
+                    <button class="btn-primary btn-success" onclick="confirmarPago()" id="btnConfirmarPago">💰 Confirmar Pago</button>
+                    <button class="btn-primary btn-danger" onclick="cancelarPedido()">❌ Cancelar Pedido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let pedidoActual = null;
+        
+        // Verificar autenticación
+        function verificarAuth() {
+            const auth = localStorage.getItem('adminAuth');
+            const authTime = localStorage.getItem('adminAuthTime');
+            
+            if (auth !== 'true' || !authTime || (Date.now() - parseInt(authTime)) >= 7200000) {
+                localStorage.removeItem('adminAuth');
+                localStorage.removeItem('adminAuthTime');
+                window.location.href = 'admin-login.html';
+                return false;
+            }
+            return true;
+        }
+        
+        // Buscar pedido por token
+        function buscarToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            
+            if (!token) {
+                mostrarError('Por favor, ingrese un token');
+                return;
+            }
+            
+            // Buscar en compras pendientes
+            const comprasPendientes = JSON.parse(localStorage.getItem('pavilions_compras_pendientes') || '[]');
+            const pedido = comprasPendientes.find(c => c.token === token);
+            
+            // También buscar en historial de pagos
+            const historialPagos = JSON.parse(localStorage.getItem('pavilions_historial_pagos') || '[]');
+            const pago = historialPagos.find(p => p.token === token);
+            
+            if (!pedido && !pago) {
+                mostrarError('Token no encontrado. Verifique el código e intente nuevamente.');
+                return;
+            }
+            
+            // Usar el pedido encontrado (priorizar pendiente sobre pagado)
+            pedidoActual = pedido || pago;
+            mostrarPedido(pedidoActual);
+        }
+        
+        // Mostrar información del pedido
+        function mostrarPedido(pedido) {
+            document.getElementById('resultadoBusqueda').innerHTML = '';
+            document.getElementById('pedidoInfo').style.display = 'block';
+            
+            document.getElementById('pedidoToken').textContent = pedido.token;
+            document.getElementById('pedidoFecha').textContent = new Date(pedido.fecha || pedido.fechaPago).toLocaleString('es-AR');
+            
+            const estado = pedido.estado || 'pendiente';
+            const estadoDisplay = {
+                'pendiente': '⏳ Pendiente de pago',
+                'confirmado': '✅ Pagado y confirmado',
+                'cancelado': '❌ Cancelado'
+            };
+            document.getElementById('pedidoEstado').textContent = estadoDisplay[estado] || estado;
+            
+            // Calcular total
+            const total = pedido.productos.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
+            document.getElementById('pedidoTotal').textContent = `$${total.toLocaleString('es-AR')}`;
+            
+            // Mostrar productos
+            const productosHTML = pedido.productos.map(item => {
+                const talle = item.talleSeleccionado ? ` (${item.talleSeleccionado})` : '';
+                return `
+                    <div class="producto-item">
+                        <div class="producto-nombre">${item.nombre}${talle}</div>
+                        <div class="producto-detalles">
+                            Cantidad: ${item.quantity} - Precio unitario: $${item.precio.toLocaleString('es-AR')}
+                        </div>
+                        <div class="producto-subtotal">
+                            Subtotal: $${(item.precio * item.quantity).toLocaleString('es-AR')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('productosList').innerHTML = productosHTML;
+            
+            // Mostrar/ocultar botón de confirmar pago
+            const btnConfirmar = document.getElementById('btnConfirmarPago');
+            if (estado === 'pendiente') {
+                btnConfirmar.style.display = 'inline-block';
+            } else {
+                btnConfirmar.style.display = 'none';
+                mostrarWarning('Este pedido ya fue procesado.');
+            }
+        }
+        
+        // Confirmar pago
+        function confirmarPago() {
+            if (!pedidoActual || pedidoActual.estado !== 'pendiente') return;
+            
+            if (!confirm('¿Está seguro de confirmar el pago de este pedido? Se descontará el stock automáticamente.')) {
+                return;
+            }
+            
+            // Descontar stock
+            const productos = JSON.parse(localStorage.getItem('pavilions_products') || '[]');
+            
+            pedidoActual.productos.forEach(item => {
+                const producto = productos.find(p => p.id === item.productId);
+                if (!producto) return;
+                
+                if (item.talleSeleccionado) {
+                    producto.stock[item.talleSeleccionado] = Math.max(0, producto.stock[item.talleSeleccionado] - item.quantity);
+                } else {
+                    producto.stock.unico = Math.max(0, producto.stock.unico - item.quantity);
+                }
+            });
+            
+            // Guardar productos actualizados
+            localStorage.setItem('pavilions_products', JSON.stringify(productos));
+            
+            // Guardar en historial de pagos
+            const historialPagos = JSON.parse(localStorage.getItem('pavilions_historial_pagos') || '[]');
+            const pagoInfo = {
+                ...pedidoActual,
+                estado: 'confirmado',
+                fechaPago: new Date().toISOString(),
+                monto: pedidoActual.productos.reduce((sum, item) => sum + (item.precio * item.quantity), 0),
+                tiempoActualizacion: new Date().toISOString()
+            };
+            historialPagos.push(pagoInfo);
+            localStorage.setItem('pavilions_historial_pagos', JSON.stringify(historialPagos));
+            
+            // Eliminar de pendientes
+            const comprasPendientes = JSON.parse(localStorage.getItem('pavilions_compras_pendientes') || '[]');
+            const index = comprasPendientes.findIndex(c => c.token === pedidoActual.token);
+            if (index !== -1) {
+                comprasPendientes.splice(index, 1);
+                localStorage.setItem('pavilions_compras_pendientes', JSON.stringify(comprasPendientes));
+            }
+            
+            mostrarSuccess('✅ Pago confirmado exitosamente. Stock descontado automáticamente.');
+            
+            // Actualizar vista
+            pedidoActual.estado = 'confirmado';
+            mostrarPedido(pedidoActual);
+            
+            // Notificar al cliente (opcional)
+            setTimeout(() => {
+                if (confirm('¿Quiere notificar al cliente que su pago fue confirmado?')) {
+                    const mensaje = `✅ ¡Tu pago del pedido #${pedidoActual.timestamp} ha sido confirmado!\n\nEstamos preparando tu envío. Te contactaremos pronto con los detalles del envío.\n\nGracias por tu compra 🛍️`;
+                    const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(mensaje)}`;
+                    window.open(whatsappUrl, '_blank');
+                }
+            }, 1500);
+        }
+        
+        // Cancelar pedido
+        function cancelarPedido() {
+            if (!pedidoActual) return;
+            
+            if (!confirm('¿Está seguro de cancelar este pedido?')) {
+                return;
+            }
+            
+            // Actualizar estado
+            const comprasPendientes = JSON.parse(localStorage.getItem('pavilions_compras_pendientes') || '[]');
+            const index = comprasPendientes.findIndex(c => c.token === pedidoActual.token);
+            if (index !== -1) {
+                comprasPendientes[index].estado = 'cancelado';
+                localStorage.setItem('pavilions_compras_pendientes', JSON.stringify(comprasPendientes));
+            }
+            
+            mostrarError('❌ Pedido cancelado.');
+            
+            // Actualizar vista
+            pedidoActual.estado = 'cancelado';
+            mostrarPedido(pedidoActual);
+        }
+        
+        // Ver historial
+        function verHistorial() {
+            window.location.href = 'historial-pagos.html';
+        }
+        
+        // Funciones de mensajes
+        function mostrarError(mensaje) {
+            document.getElementById('resultadoBusqueda').innerHTML = `<div class="error">${mensaje}</div>`;
+            document.getElementById('pedidoInfo').style.display = 'none';
+        }
+        
+        function mostrarSuccess(mensaje) {
+            document.getElementById('resultadoBusqueda').innerHTML = `<div class="success">${mensaje}</div>`;
+        }
+        
+        function mostrarWarning(mensaje) {
+            document.getElementById('resultadoBusqueda').innerHTML = `<div class="warning">${mensaje}</div>`;
+        }
+        
+        // Permitir Enter para buscar
+        document.getElementById('tokenInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                buscarToken();
+            }
+        });
+        
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            if (verificarAuth()) {
+                document.getElementById('tokenInput').focus();
+            }
+        });
+    </script>
+</body>
+</html>

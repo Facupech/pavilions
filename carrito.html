@@ -100,6 +100,28 @@
                             <span id="total">$0</span>
                         </div>
 
+                        <!-- CAMPO DE TELÉFONO OBLIGATORIO -->
+                        <div class="summary-divider"></div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label for="telefono" style="display: block; margin-bottom: 8px; font-weight: 600; color: #000;">
+                                Tu teléfono <span style="color: red;">*</span>
+                            </label>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span style="font-weight: bold; color: #000;">+54</span>
+                                <input 
+                                    type="tel" 
+                                    id="telefono" 
+                                    placeholder="12345678910" 
+                                    maxlength="11"
+                                    style="flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                    oninput="validarResultido(this)"
+                                >
+                            </div>
+                            <small id="telefonoError" style="color: red; display: none; font-size: 12px;">
+                                ⚠️ Debes ingresar 11 dígitos
+                            </small>
+                        </div>
+
                         <div class="checkout-actions">
                             <button class="continue-shopping-btn" onclick="window.location.href='index.html'">
                                 Seguir comprando
@@ -294,9 +316,33 @@
             return `${timestamp}-${random}`.toUpperCase();
         }
 
+        // Validar teléfono
+        function validarResultido(input) {
+            const value = input.value.replace(/\s/g, ''); // Eliminar espacios
+            const errorEl = document.getElementById('telefonoError');
+            
+            if (value.length !== 11) {
+                errorEl.style.display = 'block';
+                input.style.borderColor = '#ff4444';
+                return false;
+            } else {
+                errorEl.style.display = 'none';
+                input.style.borderColor = '#ddd';
+                return true;
+            }
+        }
+
         function proceedToCheckout() {
             const cart = cartManager.cart;
             if (cart.length === 0) return;
+            
+            // Validar teléfono antes de continuar
+            const telefonoInput = document.getElementById('telefono');
+            if (!validarResultido(telefonoInput)) {
+                showToast('⚠️ Por favor, ingresa tu número de WhatsApp completo', 'error');
+                telefonoInput.focus();
+                return;
+            }
             
             console.log('🚀 Procediendo al checkout con token'); // Debug
             
@@ -307,6 +353,7 @@
             const compraInfo = {
                 token: tokenCompra,
                 productos: cart,
+                telefonoUsuario: '+54 ' + telefonoInput.value, // Guardar teléfono completo
                 fecha: new Date().toISOString(),
                 estado: 'pendiente', // pendiente, confirmado, cancelado
                 timestamp: Date.now()

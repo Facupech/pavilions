@@ -354,6 +354,10 @@
                         <div class="meta-value" id="pedidoEstado"></div>
                     </div>
                     <div class="meta-item">
+                        <div class="meta-label">📱 WhatsApp del Cliente</div>
+                        <div class="meta-value" id="pedidoTelefono">No disponible</div>
+                    </div>
+                    <div class="meta-item">
                         <div class="meta-label">Total</div>
                         <div class="meta-value" id="pedidoTotal">$0</div>
                     </div>
@@ -430,7 +434,19 @@
                 'confirmado': '✅ Pagado y confirmado',
                 'cancelado': '❌ Cancelado'
             };
-            document.getElementById('pedidoEstado').textContent = estadoDisplay[estado] || estado;
+            document.getElementById('pedidoEstado').textContent = estadoDisplay[estado];
+            
+            // Mostrar teléfono del usuario si está disponible
+            const telefonoEl = document.getElementById('pedidoTelefono');
+            if (pedido.telefonoUsuario) {
+                telefonoEl.textContent = pedido.telefonoUsuario;
+                telefonoEl.style.color = '#28a745';
+                telefonoEl.style.fontWeight = '600';
+            } else {
+                telefonoEl.textContent = 'No disponible';
+                telefonoEl.style.color = '#666';
+                telefonoEl.style.fontWeight = '400';
+            }
             
             // Calcular total
             const total = pedido.productos.reduce((sum, item) => sum + (item.precio * item.quantity), 0);
@@ -518,8 +534,10 @@
             // Notificar al cliente (opcional)
             setTimeout(() => {
                 if (confirm('¿Quiere notificar al cliente que su pago fue confirmado?')) {
+                    // Usar el teléfono del usuario si está disponible, sino el teléfono de la marca
+                    const telefonoDestino = pedidoActual.telefonoUsuario || '5491127641124';
                     const mensaje = `✅ ¡Tu pago del pedido #${pedidoActual.timestamp} ha sido confirmado!\n\nEstamos preparando tu envío. Te contactaremos pronto con los detalles del envío.\n\nGracias por tu compra 🛍️`;
-                    const whatsappUrl = `https://wa.me/5491127641124?text=${encodeURIComponent(mensaje)}`;
+                    const whatsappUrl = `https://wa.me/${telefonoDestino.replace(/[^\d]/g, '')}?text=${encodeURIComponent(mensaje)}`;
                     window.open(whatsappUrl, '_blank');
                 }
             }, 1500);
